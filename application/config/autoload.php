@@ -1,6 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-
+require('custom_constant.php');
 /*
 | -------------------------------------------------------------------
 | AUTO-LOADER
@@ -58,8 +58,7 @@ $autoload['packages'] = array();
 |
 |	$autoload['libraries'] = array('user_agent' => 'ua');
 */
-$autoload['libraries'] = array();
-
+$autoload['libraries'] = array('database','upload','session');
 /*
 | -------------------------------------------------------------------
 |  Auto-load Drivers
@@ -89,7 +88,8 @@ $autoload['drivers'] = array();
 |
 |	$autoload['helper'] = array('url', 'file');
 */
-$autoload['helper'] = array();
+//$autoload['helper'] = array();
+$autoload['helper'] = array('url','form');
 
 /*
 | -------------------------------------------------------------------
