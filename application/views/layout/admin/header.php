@@ -29,14 +29,39 @@
 	<link href="<?php echo ASSETS_URL; ?>plugins/jquery-simplecolorpicker/jquery.simplecolorpicker-fontawesome.css" rel="stylesheet" />
 	<link href="<?php echo ASSETS_URL; ?>plugins/jquery-simplecolorpicker/jquery.simplecolorpicker-glyphicons.css" rel="stylesheet" />
 	<!-- ================== END PAGE LEVEL STYLE ================== -->
-	
+	<style type="text/css">
+		.panel.panel-inverse{
+			border: 0px solid black !important;
+
+		}
+		.error{
+			color:#900 !important;
+			height:35px !important;
+			text-align: left !important;
+		}
+	</style>
 	
 </head>
 <body>
 	<!-- begin #page-loader -->
 	<div id="page-loader" class="fade show"><span class="spinner"></span></div>
 	<!-- end #page-loader -->
-	
+	 <?php if($this->session->flashdata('success')) { ?>
+		 <div id="gritter-notice-wrapper">
+			 <div id="gritter-item-4" class="gritter-item-wrapper" style="" role="alert">
+			 		<div class="gritter-top"></div>
+			 		<div class="gritter-item">
+			 			<a class="gritter-close" href="#" tabindex="1" style="display: none;">Close Notification</a>
+			 			<div class="gritter-without-image">
+			 				<span class="gritter-title">Message</span>
+			 				<p> <?php echo $this->session->flashdata('message')?></p>
+			 			</div>
+			 			<div style="clear:both"></div>
+			 		</div>
+			 		<div class="gritter-bottom"></div>
+			 	</div>
+		 </div>
+     <?php }?>
 	<!-- begin #header -->
 		<div id="header" class="header navbar-default">
 			<!-- begin navbar-header -->
@@ -63,7 +88,7 @@
 						<a href="javascript:;" class="dropdown-item">Edit Profile</a>
 						
 						<div class="dropdown-divider"></div>
-						<a href="javascript:;" class="dropdown-item">Log Out</a>
+						<a href="<?php echo ADMIN_URL?>logout" class="dropdown-item">Log Out</a>
 					</div>
 				</li>
 			</ul>

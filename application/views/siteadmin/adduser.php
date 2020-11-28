@@ -2,7 +2,7 @@
 	$this->load->view('layout/admin/header');
 	$this->load->view('layout/admin/sidebar');
 ?>
-asdfasdfasdf
+ 
 		<!-- begin #content -->
 		<div id="content" class="content">
 			

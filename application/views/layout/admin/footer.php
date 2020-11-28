@@ -38,5 +38,8 @@
 	<script src="<?php echo ASSETS_URL; ?>plugins/clipboard/dist/clipboard.min.js"></script>
 	<script src="<?php echo ASSETS_URL; ?>js/demo/form-plugins.demo.js"></script>
 	<!-- ================== END PAGE LEVEL JS ================== -->
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"></script>
+	<script src="<?php echo ASSETS_URL?>js/custom_validation.js"></script>
 </body>
 </html>
