@@ -38,7 +38,199 @@ $(document).ready(function(){
 		
 	  });
    // END HERE
+   //  Add Owner Form validation start here
+   $("#add_owner").validate({
+	    rules: {
+	      owner_firstname : {
+	        required: true,
+	      },
+	      owner_lastname : {
+	        required: true,
+	      },
+	      owner_username : {
+	        required: true,
+	        remote : {
+	   				url:  base_url+'checkusername',
+			        type: "post",
+			      	data: {owner_username: function() {return $('#owner_username').val();}}
+	   		}
+	      },
+	      owner_devision : {
+	        required: true,
+	      },
+	      owner_station : {
+	      	required: true,
+	      },
+	      owner_email : {
+	        required: true,
+	   		remote : {
+	   				url:  base_url+'chackuseremail',
+			        type: "post",
+			      	data: {owner_email: function() {return $('#owner_email').val();}}
+	   		}
+	      },
+	      owner_phone : {
+	        required: true,
+	        number:true,
+	        minlength : 10,
+	        maxlength : 10,
 
+	      },
+	      owner_password : {
+	        required: true,
+	        minlength : 8,
+	       },
+	      owner_rep_password : {
+	        required: true,
+	       equalTo: "#owner_password",
+	       },
+	    },
+	    messages : {
+		  owner_firstname: {
+		    required: "First Name should not be empty",
+		  },
+		  owner_lastname: {
+		    required: "Last name should not be empty",
+		  },
+		  owner_devision: {
+		    required: "Owner Devision should not be empty",
+		  },
+		  owner_station: {
+		    required: "Owner Station Name should not be empty",
+		  },
+		  owner_phone: {
+		    required: "Mobile Number should not be empty",
+		    number: "Mobile Number should Numeric",
+		    min: "Mobile Number should be min 10 digit",
+		  },
+		  owner_username: {
+		    required: "Username should not be empty",
+			remote: jQuery.validator.format("{0} is already taken. Please choose another username. ")
+		  },
+		  owner_email: {
+		    required: "Email should not be empty",
+			remote: jQuery.validator.format("{0} is already taken. Please choose another Email. ")
+		  },
+		  owner_password: {
+		    required: "Password Should not be blank",
+			minlength: "Password Should have minimum 8 digit",
+		  },
+		 
+		  owner_password: {
+		    required: "Password Should not be blank",
+			equalto: "Password does not match",
+		  },
+		}
+		
+	  });
+
+   // end here
+
+   //  Edit Owner Information Form validation start here
+   $("#edit_owner").validate({
+	    rules: {
+	      owner_firstname : {
+	        required: true,
+	      },
+	      owner_lastname : {
+	        required: true,
+	      },
+	     /* owner_username : {
+	        required: true,
+	        remote : {
+	   				url:  base_url+'checkeditusername',
+			        type: "post",
+			      	//data: {owner_username: function() {return $('#owner_username').val();}}
+			      	data: {owner_username:$('#owner_username').val(),owner_id:$('#ownerId').val()}
+	   		}
+	      },*/
+	      owner_devision : {
+	        required: true,
+	      },
+	      owner_station : {
+	      	required: true,
+	      },
+	      /*owner_email : {
+	        required: true,
+	   		remote : {
+	   				url:  base_url+'chackuseremail',
+			        type: "post",
+			      	data: {owner_email: function() {return $('#owner_email').val();}}
+	   		}
+	      },*/
+	      owner_phone : {
+	        required: true,
+	        number:true,
+	        minlength : 10,
+	        maxlength : 10,
+
+	      },
+	      owner_password : {
+	       // required: true,
+	        minlength : 8,
+	       },
+	      owner_rep_password : {
+	        //required: true,
+	       equalTo: "#owner_password",
+	       },
+	    },
+	    messages : {
+		  owner_firstname: {
+		    required: "First Name should not be empty",
+		  },
+		  owner_lastname: {
+		    required: "Last name should not be empty",
+		  },
+		  owner_devision: {
+		    required: "Owner Devision should not be empty",
+		  },
+		  owner_station: {
+		    required: "Owner Station Name should not be empty",
+		  },
+		  owner_phone: {
+		    required: "Mobile Number should not be empty",
+		    number: "Mobile Number should Numeric",
+		    min: "Mobile Number should be min 10 digit",
+		  },
+		  owner_username: {
+		    required: "Username should not be empty",
+			remote: jQuery.validator.format("{0} is already taken. Please choose another username. ")
+		  },
+		  owner_email: {
+		    required: "Email should not be empty",
+			remote: jQuery.validator.format("{0} is already taken. Please choose another Email. ")
+		  },
+		  owner_password: {
+		    required: "Password Should not be blank",
+			minlength: "Password Should have minimum 8 digit",
+		  },
+		 
+		  owner_password: {
+		    required: "Password Should not be blank",
+			equalto: "Password does not match",
+		  },
+		}
+		
+	  });
+
+   // end here
+	  $("#edit_devision").validate({
+	    rules: {
+	      devision_name : {
+	        required: true,
+	   		 
+	      },
+	    },
+	    messages : {
+		  devision_name: {
+		    required: "Devision Name should not be empty",
+			 
+		  },
+		 
+		}
+		
+	  });
+   // end here
    // Processes Validation start from here
     $("#add_processes").validate({
 	    rules: {
@@ -77,9 +269,9 @@ $(document).ready(function(){
    		var tablename 	= 	changestatus.attr("data-tablename");
    		var statuvalue 	= 	changestatus.attr("data-status");
    		var statusid 	= 	changestatus.attr("data-mainid");
-   		alert(statusid);
+   		 
    		var txt;
-		var r = confirm("Are You Sure To Change The Devision Status !");
+		var r = confirm("Are You Sure To Want To Change Status !");
 		if (r == true) {
 			 $.ajax({
 	   			type : "POST",
@@ -109,16 +301,16 @@ $(document).ready(function(){
    			data : {proid:proid},
    			success :  function(res){
    				$("#modalclick").click();
-   				$("#proname").html(proname);
+   				$("#proname").html(proname+' processes');
    				var htmlmain = '';
    				var obj = JSON.parse(res);
    				$.each(obj,function(key,val){
    					var sub_processes_name 	= val.sub_processes_name;
    					var sub_proid 			= val.id;
-   					htmlmain += '<div class="row"><div class="col-md-12" style="padding:5px; text-align:center;margin-top:5px;border:1px solid #ddd;border-radius:4px;">'+sub_processes_name+'</div></div>';
+   					htmlmain += '<div class="row"><div class="col-md-12 modal_processes label label-green" >'+sub_processes_name+'</div></div>';
    				
    				})
-   				htmlmain += '<div> <a href="'+base_url+'editsubprocesses/'+urlproid+'">Click To Edit Sub Processes</a></div>';
+   				htmlmain += '<div style="margin-top:10px;"> <a href="'+base_url+'editsubprocesses/'+urlproid+'" class="label label-success m-l-5 t-minus-1">Click To Edit Sub Processes</a></div>';
    				$("#contenthere").html(htmlmain);
    			}
 
@@ -147,5 +339,12 @@ var i = 0;
          
         $("#row"+button_id+"").remove();
     });
+   // end here
+   // Remove edit sub processes start here
+   $(document).on('click','.presubproclass', function(){
+   		 var button_id = $(this).attr("data-id");
+         
+        $("#rowmain_"+button_id).remove();
+   })
    // end here
 })

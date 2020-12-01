@@ -28,6 +28,8 @@
 	<link href="<?php echo ASSETS_URL; ?>plugins/jquery-simplecolorpicker/jquery.simplecolorpicker.css" rel="stylesheet" />
 	<link href="<?php echo ASSETS_URL; ?>plugins/jquery-simplecolorpicker/jquery.simplecolorpicker-fontawesome.css" rel="stylesheet" />
 	<link href="<?php echo ASSETS_URL; ?>plugins/jquery-simplecolorpicker/jquery.simplecolorpicker-glyphicons.css" rel="stylesheet" />
+
+		<link href="<?php echo ASSETS_URL; ?>css/custom_style.css" rel="stylesheet" />
 	<!-- ================== END PAGE LEVEL STYLE ================== -->
 	<style type="text/css">
 		.panel.panel-inverse{

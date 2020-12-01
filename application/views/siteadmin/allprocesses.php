@@ -4,15 +4,14 @@
 	$this->load->model('AdminModel');
 
 ?>
-   <button type="button" class="btn btn-info btn-lg" id="modalclick" data-toggle="modal" data-target="#myModal">Open Modal</button>
+   <button type="button" class="btn btn-info btn-lg" id="modalclick" style="display: block;" data-toggle="modal" data-target="#myModal">Open Modal</button>
    <div id="myModal" class="modal fade" role="dialog">
   <div class="modal-dialog">
 
     <!-- Modal content-->
     <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title"><lable id="proname"></lable> Processes</h4>
+      <div class="modal-header"> 
+        <h4 class="modal-title modal_processes_heading"><lable id="proname"></lable></h4>
       </div>
       <div class="modal-body" id="contenthere">
         
@@ -30,19 +29,19 @@
 			<!-- begin breadcrumb -->
 			<ol class="breadcrumb float-xl-right">
 				<li class="breadcrumb-item"><a href="javascript:;">Home</a></li>
-				<li class="breadcrumb-item"><a href="javascript:;">List Devision</a></li>
+				<li class="breadcrumb-item"><a href="javascript:;">List Processes</a></li>
 				 
 			</ol>
 			<!-- end breadcrumb -->
 			<!-- begin page-header -->
-			<h1 class="page-header">All Devision</h1>
+			<h1 class="page-header">All Processes</h1>
 			<div class="row">
 				<div class="col-xl-12 ui-sortable">
 					<!-- begin panel -->
 					<div class="panel panel-inverse" data-sortable-id="table-basic-7">
 						<!-- begin panel-heading -->
 						<div class="panel-heading ui-sortable-handle">
-							<h4 class="panel-title">All Devision <span class="label label-success m-l-5 t-minus-1">NEW</span></h4>
+							<h4 class="panel-title">All Processes <span class="label label-success m-l-5 t-minus-1">NEW</span></h4>
 							 
 						</div>
 						<!-- end panel-heading -->
@@ -79,12 +78,12 @@
 									 
 									<td><?php echo $key+1; ?></td>
 									<td><?php echo $val->processes_name; ?></td>
-									<td><?php echo $val->processes_full_name; ?></td>
+									<td><?php echo substr($val->processes_full_name,0,25).'...'; ?></td>
 									<td>
 										<?php 
 											if (!empty($subpro)){
 										?>
-											<a href="javascript:;" data-proname="<?php echo $val->processes_name; ?>" data-proid="<?php echo $val->id; ?>" class="btn btn-warning showsubpro">Show Processes</a>
+											<a href="javascript:;" data-proname="<?php echo $val->processes_full_name; ?>" data-proid="<?php echo $val->id; ?>" class="btn btn-warning showsubpro">Show Processes</a>
 										<?php 
 											}else{
 										?>

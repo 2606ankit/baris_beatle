@@ -1,0 +1,12 @@
+.modal_processes{
+	padding: 5px !important;
+	text-align: center;
+	margin-top: 5px ;
+	 
+	background-color: #ddd;
+	font-weight: bold !important;
+	font-size:14px; 
+}
+.modal_processes_heading{
+	font-size:12px;
+}
