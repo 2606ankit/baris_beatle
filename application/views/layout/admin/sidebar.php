@@ -31,8 +31,19 @@
 							<span>Raiway Owner</span>
 						</a>
 						<ul class="sub-menu">
-							<li><a href="<?php echo ADMIN_URL?>owner"><i class="fas fa-lg fa-fw m-r-10 fa-users"></i> <span>All User</span></a></li>
-							<li><a href="<?php echo ADMIN_URL?>addowner"><i class="fas fa-lg fa-fw m-r-10 fa-user-plus"></i> <span>Add User</span></a></li>
+							<li><a href="<?php echo ADMIN_URL?>owner"><i class="fas fa-lg fa-fw m-r-10 fa-users"></i> <span>All Owner</span></a></li>
+							<li><a href="<?php echo ADMIN_URL?>addowner"><i class="fas fa-lg fa-fw m-r-10 fa-user-plus"></i> <span>Add Owner</span></a></li>
+						</ul>
+					</li>
+					<li class="has-sub ">
+						<a href="javascript:;">
+							<b class="caret"></b>
+							<i class="fa fa-th-large"></i>
+							<span>Raiway Contractor</span>
+						</a>
+						<ul class="sub-menu">
+							<li><a href="<?php echo ADMIN_URL?>contractor"><i class="fas fa-lg fa-fw m-r-10 fa-users"></i> <span>All Contractor</span></a></li>
+							<li><a href="<?php echo ADMIN_URL?>addcontractor"><i class="fas fa-lg fa-fw m-r-10 fa-user-plus"></i> <span>Add Contractor</span></a></li>
 						</ul>
 					</li>
 					

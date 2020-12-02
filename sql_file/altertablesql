@@ -1,0 +1,5 @@
+
+// 1-12-2020
+
+ALTER TABLE `baris_user` ADD `user_organization` VARCHAR(255) NOT NULL AFTER `user_station`; 
+ALTER TABLE `baris_station` ADD `devision_id` INT(11) NOT NULL AFTER `station_name`; 

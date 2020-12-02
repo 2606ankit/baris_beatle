@@ -33,6 +33,7 @@ class Admin extends CI_Controller {
 	   	$this->load->library('email'); 
 	   	// get all station here
 	   	$this->getstation = $this->AdminModel->getallstation();
+	   	$this->getprcesses = $this->AdminModel->getallprocesses();
 	    
 	}
 
@@ -87,12 +88,16 @@ class Admin extends CI_Controller {
 		
 		//echo '<pre>'; print_r($getstation); die;
 		if (!empty($_POST) && !empty($_POST['owner_username'])){
+	 //	 echo '<pre>'; print_r($_POST);
+	 //echo  $processes_id = implode('|', $this->input->post('processes')); die;
+	 	  
 			$owner_station = $this->input->post('owner_station');
 			$checkstation = $this->AdminModel->checkstation($owner_station,$loginuserid);
 			if (empty($checkstation))
 			{
 				$insertdata = array(
 								'station_name'	=>	$owner_station,
+								'devision_id'	=>	$this->input->post('owner_devision'),
 								'created_by'	=>	$loginuserid,
 								'created_date'	=>	TODAY_DATE
 								);
@@ -118,6 +123,15 @@ class Admin extends CI_Controller {
 							);
 			$query = $this->db->insert('baris_user',$insertarry);
 			if ($query){
+				$lastuserid = $this->db->insert_id();
+				$processes_id = implode('|', $this->input->post('processes'));
+				$insertprocesses = array(
+									'processes_id'	=>	$processes_id,
+									'user_id'		=>	$lastuserid,
+									'created_date'	=>	TODAY_DATE,
+									);
+				$queryprocesses = $this->db->insert('baris_user_processes',$insertprocesses);
+
 				$this->session->set_flashdata('success', 'New Owner Added Successfully');
 			}
 		}
@@ -126,7 +140,8 @@ class Admin extends CI_Controller {
 				(
 					'userdata' 		=> 	$userdata,
 					'getdevision'	=>	$getdevision,
-					'getstation'	=>	$this->getstation
+					'getstation'	=>	$this->getstation,
+					'getprocsses'	=>	$this->getprcesses
 				);
 		$this->load->view('siteadmin/addowner',$data);
 	}
@@ -141,7 +156,9 @@ class Admin extends CI_Controller {
 		$getdevision = $this->AdminModel->getalldevision();
 		$loginuserid = $this->session->userdata('userid');
 		$getdata = $this->AdminModel->getownerById($ownerid);
-		// echo '<pre>'; print_r($getdata); die;
+		  //echo '<pre>'; print_r($getdata); 
+		 $userprocesses_id = explode('|',$getdata[0]->processes_id);
+
 
 		//echo '<pre>'; print_r($getstation); die;
 		if (!empty($_POST) && !empty($_POST['owner_username'])){
@@ -151,6 +168,7 @@ class Admin extends CI_Controller {
 			{
 				$insertdata = array(
 								'station_name'	=>	$owner_station,
+								'devision_id'	=>	$this->input->post('owner_devision'),
 								'created_by'	=>	$loginuserid,
 								'created_date'	=>	TODAY_DATE
 								);
@@ -177,15 +195,39 @@ class Admin extends CI_Controller {
 							);
 			$query = $this->db->where("id",$ownerid)->update('baris_user',$insertarry);
 			if ($query){
+				 
+				$selectuser = $this->db->select("*")->from("baris_user_processes")->where("user_id",$ownerid)->get();
+				$resultuser = $selectuser->result();
+				if (empty($resultuser)){
+				$processes_id = implode('|', $this->input->post('processes'));
+				$insertprocesses = array(
+									'processes_id'	=>	$processes_id,
+									'user_id'		=>	$ownerid,
+									'created_date'	=>	TODAY_DATE,
+									);
+				$queryprocesses = $this->db->insert('baris_user_processes',$insertprocesses);
+			}else {
+				$deleteuser = $this->db->where("user_id",$ownerid)->delete("baris_user_processes");
+
+				$processes_id = implode('|', $this->input->post('processes'));
+				$insertprocesses = array(
+									'processes_id'	=>	$processes_id,
+									'user_id'		=>	$ownerid,
+									'created_date'	=>	TODAY_DATE,
+									);
+				$queryprocesses = $this->db->insert('baris_user_processes',$insertprocesses);
+			}
 				redirect(ADMIN_URL.'owner');
 				$this->session->set_flashdata('success', ' Owner Updated Successfully');
 			}
 		}
 		$data = array(
-					'userdata'	=>	$userdata,
-					'getdata'	=>	$getdata,
-					'getdevision'	=> $getdevision,
-					'getstation'	=>	$this->getstation
+					'userdata'			=>	$userdata,
+					'getdata'			=>	$getdata,
+					'getdevision'		=> 	$getdevision,
+					'getstation'		=>	$this->getstation,
+					'getprocsses'		=>	$this->getprcesses,
+					'userprocesses_id'	=>	$userprocesses_id
 				);
 		$this->load->view('siteadmin/editowner',$data);
 	}
@@ -206,7 +248,27 @@ class Admin extends CI_Controller {
 		$this->load->view('siteadmin/allowner',$data);		
 	}
 	//
-
+	// Add Contractor detail start here
+	public function addcontractor()
+	{
+		if($this->session->userdata('userid') == ''){redirect(ADMIN_URL.'index');} 
+		$userdata 		= 	$this->session->userdata();
+		$getallstation 	= 	$this->AdminModel->getallstation();
+		$loginuserid 	= 	$this->session->userdata('userid');
+		$getowner 		=	$this->AdminModel->getallowner();
+	//	echo '<pre>'; print_r($getowner); die;
+		if (!empty($_POST) && !empty($_POST['cont_organization'])){
+			echo '<pre>'; print_r($_POST); die;
+		}
+		$data = array(
+				'userdata'		=>	$userdata,
+				'getallstation'	=>	$getallstation,
+				'getowner'		=>	json_decode($getowner),
+				'getstation'	=>	$this->getstation
+				);
+		$this->load->view('siteadmin/addcontractor',$data);
+	}
+	// end here
 	// Add Devision Start Here
 	public function adddevision()
 	{
@@ -566,6 +628,14 @@ class Admin extends CI_Controller {
 		}else {
 			echo 'false';
 		}
+	}
+	// end here
+	// Get all selected processes by owner 
+	public function getallprocessAccToOwner()
+	{
+		$ownerId = $_POST['ownerId'];
+		$data = $this->AdminModel->getallprocessAccToOwner($ownerId);
+		print_r(json_encode($data));
 	}
 	// end here
 

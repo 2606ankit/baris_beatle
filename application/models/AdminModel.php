@@ -122,6 +122,18 @@
 			return $result;		
 		}
 		// end here
+		// get only owner start here
+		public function getowner()
+		{
+			$data = $this->db->select("*")
+					->from("baris_user")
+					->where("user_type",OWNER)
+					->where("status !=",DELETE_STATUS)
+					->get();
+			$result = $data->result();
+			return $result;
+		}
+		// end here
 		// Get all owner with devision table and station name start here
 		public function getallowner()
 		{
@@ -139,10 +151,11 @@
 		// get owner acc to the id
 		public function getownerById($ownerid)
 		{
-			$data = $this->db->select("buser.id as id,buser.first_name as first_name,buser.last_name as last_name,buser.username as username,buser.user_email as user_email,buser.user_phone as user_phone,buser.created_date as created_date,buser.user_password as user_password, buser.status as status, bdiv.id as divid, bdiv.devision_name as devision_name, bsta.id as staid , bsta.station_name as station_name")
+			$data = $this->db->select("buser.id as id,buser.first_name as first_name,buser.last_name as last_name,buser.username as username,buser.user_email as user_email,buser.user_phone as user_phone,buser.created_date as created_date,buser.user_password as user_password, buser.status as status, bdiv.id as divid, bdiv.devision_name as devision_name, bsta.id as staid , bsta.station_name as station_name,buserpro.id as proid,buserpro.processes_id as processes_id,buserpro.user_id as uid")
 					->from("baris_user as buser")
 					->join("baris_devision as bdiv","bdiv.id = buser.user_devision","left")
 					->join("baris_station as bsta","bsta.id = buser.user_station","right")
+					->join("baris_user_processes as buserpro","buserpro.user_id = buser.id","right")
 					->where("buser.status !=",DELETE_STATUS)
 					->where("buser.id",$ownerid)
 					->get();
@@ -199,7 +212,7 @@
 		// Get all Station here
 		public function getallstation()
 		{
-			$data = $this->db->select("station_name")
+			$data = $this->db->select("*")
 					->from("baris_station")
 					->where("status !=",DELETE_STATUS)
 					->get();
@@ -223,6 +236,32 @@
 				return $staionid;
 			} 		
 
+		}
+		// end here
+
+		// Get all processes acording to the selected processes for owner
+		public function getallprocessAccToOwner($ownerId)
+		{
+			$data = $this->db->select("*")
+					->from("baris_user_processes")
+					->where("user_id",$ownerId)
+					->get();
+			$data = $data->result();
+			$processesid = explode('|',$data[0]->processes_id);
+			
+			foreach ($processesid as $k=>$v){
+				$selectdata = $this->db->select("id,processes_name")
+								->from("baris_processes")
+								->where("id",$v)
+								->get();
+				$res[] = $selectdata->result();				
+			}		
+			foreach ($res as $k=>$v){
+				foreach ($v as $h=>$l){
+					$finalarr[] = (object) array("id"=>$l->id,"proname"=>$l->processes_name);
+				}
+			}
+			return $finalarr;
 		}
 		// end here
 	}

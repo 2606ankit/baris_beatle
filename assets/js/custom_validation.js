@@ -214,6 +214,99 @@ $(document).ready(function(){
 	  });
 
    // end here
+   // Add contractor validation start here
+   //  Add Owner Form validation start here
+   $("#add_contractor").validate({
+	    rules: {
+	      cont_organization : {
+	        required: true,
+	      },
+	      cont_firstname : {
+	        required: true,
+	      },
+	      cont_lastname : {
+	        required: true,
+	      },
+	      cont_owner : {
+	        required: true,
+	      },
+	      cont_username : {
+	        required: true,
+	        remote : {
+	   				url:  base_url+'checkusername',
+			        type: "post",
+			      	data: {owner_username: function() {return $('#cont_username').val();}}
+	   		}
+	      },
+	      
+	      cont_email : {
+	        required: true,
+	   		remote : {
+	   				url:  base_url+'chackuseremail',
+			        type: "post",
+			      	data: {owner_email: function() {return $('#cont_email').val();}}
+	   		}
+	      },
+	      cont_phone : {
+	        required: true,
+	        number:true,
+	        minlength : 10,
+	        maxlength : 10,
+
+	      },
+	      cont_password : {
+	        required: true,
+	        minlength : 8,
+	       },
+	      cont_rep_password : {
+	        
+	       equalTo: "#cont_password",
+	       },
+	    },
+	    messages : {
+		  cont_organization: {
+		    required: "Organization name should not be empty",
+		  },
+		  cont_firstname: {
+		    required: "First Name should not be empty",
+		  },
+		  cont_lastname: {
+		    required: "Last name should not be empty",
+		  },
+		  cont_owner: {
+		    required: "Plese Select Owner",
+		  },
+		  
+		  cont_phone: {
+		    required: "Mobile Number should not be empty",
+		    number: "Mobile Number should Numeric",
+		    min: "Mobile Number should be min 10 digit",
+		  },
+		  cont_username: {
+		    required: "Username should not be empty",
+			remote: jQuery.validator.format("{0} is already taken. Please choose another username. ")
+		  },
+		  cont_email: {
+		    required: "Email should not be empty",
+			remote: jQuery.validator.format("{0} is already taken. Please choose another Email. ")
+		  },
+		  cont_password: {
+		    required: "Password Should not be blank",
+			minlength: "Password Should have minimum 8 digit",
+		  },
+		 
+		  cont_rep_password: {
+		    required: "Password Should not be blank",
+			equalto: "Password does not match",
+		  },
+		}
+		
+	  });
+
+   // end here
+   // end here
+
+
 	  $("#edit_devision").validate({
 	    rules: {
 	      devision_name : {
@@ -321,6 +414,7 @@ $(document).ready(function(){
 
 })
 $(document).ready(function(){
+	 var base_url = "http://localhost/beatle_baris/index.php/admin/";
 var i = 0;
    //Add Sub Processes Start here 
    $("#btnaddpro").click(function(){
@@ -346,5 +440,29 @@ var i = 0;
          
         $("#rowmain_"+button_id).remove();
    })
+   // end here
+
+
+   // Get all processes according to the owner id
+   	$("#cont_owner").change(function(){
+   		var ownerId = $("#cont_owner").val();
+   		$("#hideprodiv").show();
+   		
+   		$.ajax({
+   			type : 'post',
+   			url  : base_url+'getallprocessAccToOwner',
+   			data : {ownerId:ownerId},
+   			success :  function(res){
+
+   				var obj = JSON.parse(res);
+   				var  mainhtml = '';
+   				$.each(obj,function(key,value){
+   					 
+   					 mainhtml += '<div class="col-md-4"><input type="checkbox" name="processes[]" id="processes" value="'+value.proname+'">'+value.proname+'</div>';
+   				})
+   				$("#prodiv").html(mainhtml);
+   			}
+   		})
+   	})
    // end here
 })

@@ -100,6 +100,21 @@
 									</div>
 								</div>
 
+								<div class="form-group row m-b-15">
+									<label class="col-md-4 col-sm-4 col-form-label" for="full1name">Processes * :</label>
+									<div class="col-md-8 col-sm-8">
+										<?php 
+											foreach ($getprocsses as $key=>$val){
+										?>
+											<div class="col-md-4">
+												<input type="checkbox" name="processes[]" id="processes" value="<?php echo $val->id;?>" <?php if (in_array($val->id,$userprocesses_id)){ echo 'checked="checked"'; }?> >
+												<?php echo $val->processes_name; ?>
+											</div>
+										<?php 
+											}
+										?>
+									</div>
+								</div>
 								<div class="form-group row m-b-0">
 									<label class="col-md-4 col-sm-4 col-form-label">&nbsp;</label>
 									<div class="col-md-8 col-sm-8">

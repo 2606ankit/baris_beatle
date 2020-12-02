@@ -34,8 +34,7 @@
 								<th width="1%">No.</th>
 								<th class="text-nowrap">Owner Name</th>
 								<th class="text-nowrap">Username</th>
-								<th class="text-nowrap">Email</th>
-								<th class="text-nowrap">Phone</th>
+								<th class="text-nowrap">Email</th> 
 								<th class="text-nowrap">Station Devision</th>
 								<th class="text-nowrap">Station Name</th>
 								<th class="text-nowrap">Status</th>
@@ -49,7 +48,7 @@
 								 if (!empty($getallowner)){
 								 	foreach ($getallowner as $key=>$val){
 								 		$date = date('d, M Y',strtotime($val->created_date));
-								 		echo $val->status;
+								 		 
 								 		if ($val->status == ACTIVE_STATUS){
 								 			$status = '<span class="label label-success m-l-5 t-minus-1">Active</span>';
 								 		}else {
@@ -63,8 +62,7 @@
 									<td><?php echo $key+1; ?></td>
 									<td><?php echo $val->first_name.' '.$val->last_name; ?></td>
 									<td><?php echo $val->username; ?></td>
-									<td><?php echo $val->user_email; ?></td>
-									<td><?php echo $val->user_phone; ?></td>
+									<td><?php echo $val->user_email; ?></td> 
 									<td><?php echo $val->devision_name; ?></td>
 									<td><?php echo $val->station_name; ?></td>
 									<td><?php echo $date; ?></td>
@@ -80,6 +78,7 @@
 												 
 												<a href="javascript:;" class="dropdown-item changestatus" data-status="0" data-tablename="user" data-mainid="<?php echo $val->id;?>">Inactive</a>
 												<a href="javascript:;" class="dropdown-item changestatus" data-status="1" data-tablename="user" data-mainid="<?php echo $val->id;?>">Active</a>
+												 <a href="javascript:;" class="dropdown-item" data-status="1" data-tablename="user" data-mainid="<?php echo $val->id;?>">Set Processes</a>
 												 
 											</div>
 									</td>
@@ -99,8 +98,7 @@
 								<th width="1%">No.</th>
 								<th class="text-nowrap">Owner Name</th>
 								<th class="text-nowrap">Username</th>
-								<th class="text-nowrap">Email</th>
-								<th class="text-nowrap">Phone</th>
+								<th class="text-nowrap">Email</th> 
 								<th class="text-nowrap">Station Devision</th>
 								<th class="text-nowrap">Station Name</th>
 								<th class="text-nowrap">Status</th>
