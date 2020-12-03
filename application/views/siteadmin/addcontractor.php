@@ -8,12 +8,12 @@
 			<!-- begin breadcrumb -->
 			<ol class="breadcrumb float-xl-right">
 				<li class="breadcrumb-item"><a href="javascript:;">Home</a></li>
-				<li class="breadcrumb-item"><a href="javascript:;">Owner</a></li>
+				<li class="breadcrumb-item"><a href="javascript:;">Contractor</a></li>
 				 
 			</ol>
 			<!-- end breadcrumb -->
 			<!-- begin page-header -->
-			<h1 class="page-header">Add Owner</h1>
+			<h1 class="page-header">Add Contractor</h1>
 			<!-- end page-header -->
 			<!-- begin panel --> 
 				 
@@ -23,7 +23,7 @@
 					<div class="panel panel-inverse" data-sortable-id="form-validation-1">
 						<!-- begin panel-heading -->
 						<div class="panel-heading ui-sortable-handle">
-							<h4 class="panel-title">Add Owner</h4>
+							<h4 class="panel-title">Add Contractor</h4>
 							 
 						</div>
 						<!-- end panel-heading -->
@@ -64,7 +64,7 @@
 												<?php 
 													foreach ($getowner as $key=>$val){
 												?>
-													<option value="<?php echo $val->id; ?>"><?php echo $val->first_name.' '.$val->last_name.' , '.$val->devision_name.' (Devision) , '.$val->station_name.' (station)'; ?></option>
+													<option value="<?php echo $val->id.'|'.$val->divid.'|'.$val->staid; ?>"><?php echo $val->first_name.' '.$val->last_name.' , '.$val->devision_name.' (Devision) , '.$val->station_name.' (station)'; ?></option>
 												<?php 
 													}
 												?>

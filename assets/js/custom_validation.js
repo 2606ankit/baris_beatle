@@ -458,7 +458,7 @@ var i = 0;
    				var  mainhtml = '';
    				$.each(obj,function(key,value){
    					 
-   					 mainhtml += '<div class="col-md-4"><input type="checkbox" name="processes[]" id="processes" value="'+value.proname+'">'+value.proname+'</div>';
+   					 mainhtml += '<div class="col-md-4"><input type="checkbox" name="processes[]" id="processes" value="'+value.id+'">'+value.proname+'</div>';
    				})
    				$("#prodiv").html(mainhtml);
    			}

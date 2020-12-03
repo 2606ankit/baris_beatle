@@ -34,6 +34,7 @@ class Admin extends CI_Controller {
 	   	// get all station here
 	   	$this->getstation = $this->AdminModel->getallstation();
 	   	$this->getprcesses = $this->AdminModel->getallprocesses();
+	   	$this->getorganization = $this->AdminModel->getallorgnization();
 	    
 	}
 
@@ -72,7 +73,7 @@ class Admin extends CI_Controller {
 	{
 		if($this->session->userdata('userid') == ''){redirect(ADMIN_URL.'index');} 
 		$userdata = $this->session->userdata();
-		$data = array('userdata' => $userdata);
+		$data = array('userdata' => $userdata,'getorganization'=>$this->getorganization,'getprcesses'=>$this->getprcesses);
 		$this->load->view('siteadmin/dashboard',$data);
 	}
 	// end here
@@ -141,7 +142,8 @@ class Admin extends CI_Controller {
 					'userdata' 		=> 	$userdata,
 					'getdevision'	=>	$getdevision,
 					'getstation'	=>	$this->getstation,
-					'getprocsses'	=>	$this->getprcesses
+					'getprocsses'	=>	$this->getprcesses,
+					'getorganization'=>	$this->getorganization,
 				);
 		$this->load->view('siteadmin/addowner',$data);
 	}
@@ -177,6 +179,7 @@ class Admin extends CI_Controller {
 				
 			}
 			else{$lastid = $checkstation; }
+
 			if (!empty($this->input->post('owner_password'))){ $password = md5($this->input->post('owner_password'));}else {$password = $this->input->post('prepassword');}
 		//	echo '<pre>'; print_r($checkstation); die;
 			$insertarry	=	array
@@ -227,7 +230,8 @@ class Admin extends CI_Controller {
 					'getdevision'		=> 	$getdevision,
 					'getstation'		=>	$this->getstation,
 					'getprocsses'		=>	$this->getprcesses,
-					'userprocesses_id'	=>	$userprocesses_id
+					'userprocesses_id'	=>	$userprocesses_id,
+					'getorganization'	=> 	$this->getorganization
 				);
 		$this->load->view('siteadmin/editowner',$data);
 	}
@@ -242,12 +246,33 @@ class Admin extends CI_Controller {
 		$data = array(
 					'userdata' 		=> $userdata,
 					'getallowner'	=> json_decode($getallowner),
-					'getstation'	=>	$this->getstation
+					'getstation'	=>	$this->getstation,
+					'getorganization'=>$this->getorganization
 					);
 
 		$this->load->view('siteadmin/allowner',$data);		
 	}
 	//
+	// get all contractor list start here
+	public function contractor()
+	{
+		if($this->session->userdata('userid') == ''){redirect(ADMIN_URL.'index');} 
+		$userdata 		= 	$this->session->userdata();
+		$getallstation 	= 	$this->AdminModel->getallstation();
+		$loginuserid 	= 	$this->session->userdata('userid');
+		$getallcontractor = $this->AdminModel->getallcontractor();
+		$data = array
+				(
+					'userdata' 			=> 	$userdata, 
+					'getstation'		=>	$this->getstation,
+					'getprocsses'		=>	$this->getprcesses,
+					'getorganization'	=>	$this->getorganization,
+					'getallcontractor'	=>	json_decode($getallcontractor)
+				);
+				//echo '<pre>'; print_r(json_decode($getallcontractor)); die;
+		$this->load->view('siteadmin/allcontractor',$data);
+	}
+	// end here
 	// Add Contractor detail start here
 	public function addcontractor()
 	{
@@ -256,15 +281,53 @@ class Admin extends CI_Controller {
 		$getallstation 	= 	$this->AdminModel->getallstation();
 		$loginuserid 	= 	$this->session->userdata('userid');
 		$getowner 		=	$this->AdminModel->getallowner();
-	//	echo '<pre>'; print_r($getowner); die;
+		//echo '<pre>'; print_r(json_decode($getowner)); die;
 		if (!empty($_POST) && !empty($_POST['cont_organization'])){
-			echo '<pre>'; print_r($_POST); die;
+			 
+			$orgname = $this->input->post('cont_organization');
+			$checkorg = $this->AdminModel->checkorgnization($orgname);
+			if (!empty($checkorg)){
+				$orgid = $checkorg[0]->id;
+			}
+			else {
+				$orginsertarr = array(
+									'organization_name'	=>	$this->input->post('cont_organization'),
+									'created_by'		=>	$loginuserid,
+									'created_date'		=>	TODAY_DATE
+								);
+				$insertorg = $this->db->insert("baris_organization",$orginsertarr);
+				$orgid = $this->db->insert_id();
+			}
+			$ownerdetail = $this->input->post('cont_owner');	
+			$useremail 	 = $this->input->post('cont_email');
+			$firstname 	 = $this->input->post('cont_firstname');
+			$lastname 	 = $this->input->post('cont_lastname');
+			$username 	 = $this->input->post('cont_username');
+			$phone 	 	 = $this->input->post('cont_phone');
+			$passwrod 	 = $this->input->post('cont_password');
+			$processesId = $this->input->post('processes');
+
+			$proidcheck  = implode(",",$processesId);
+			$checkcontractor = $this->AdminModel
+								->checkcontratorInfo(
+									$ownerdetail,
+									$useremail,
+									$proidcheck,
+									$firstname,
+									$lastname,
+									$username,$phone,$passwrod,$loginuserid,$orgid
+								);
+			if($checkcontractor == true){
+				$this->session->set_flashdata('success', 'New Contractor Added Successfully');
+			}
+
 		}
 		$data = array(
 				'userdata'		=>	$userdata,
 				'getallstation'	=>	$getallstation,
 				'getowner'		=>	json_decode($getowner),
-				'getstation'	=>	$this->getstation
+				'getstation'	=>	$this->getstation,
+				'getorganization'=>$this->getorganization
 				);
 		$this->load->view('siteadmin/addcontractor',$data);
 	}
@@ -289,7 +352,7 @@ class Admin extends CI_Controller {
 				$this->session->set_flashdata('success', 'New Devision Added Successfully');
 			}	
 		}
-		$data = array ('userdata' => $userdata);
+		$data = array ('userdata' => $userdata,'getorganization'=>$this->getorganization,'getprcesses'=>$this->getprcesses);
 		$this->load->view('siteadmin/add_division' , $data);
 	}
 	// End Here
@@ -299,7 +362,7 @@ class Admin extends CI_Controller {
 		if($this->session->userdata('userid') == ''){redirect(ADMIN_URL.'index');} 
 		$userdata = $this->session->userdata();
 		$getalldevision = $this->AdminModel->getalldevision();
-		$data = array('getalldevision' => $getalldevision , 'userdata' => $userdata);
+		$data = array('getalldevision' => $getalldevision , 'userdata' => $userdata,'getorganization'=>$this->getorganization,'getprcesses'=>$this->getprcesses);
 		$this->load->view('siteadmin/alldevision',$data);
 	}
 	// end here
@@ -326,7 +389,7 @@ class Admin extends CI_Controller {
 					$this->session->set_flashdata('success', 'Devision Name Updated Successfully');
 				}
 			}
-			$data = array('getdata'=>$getdata , 'userdata' => $userdata);
+			$data = array('getdata'=>$getdata , 'userdata' => $userdata , 'getorganization'=>$this->getorganization,'getprcesses'=>$this->getprcesses);
 
 			$this->load->view('siteadmin/editdevision',$data);
 		}else {
@@ -386,7 +449,7 @@ class Admin extends CI_Controller {
 				$this->session->set_flashdata('success', 'New Devision Added Successfully');
 			}	
 		}
-		$data = array ('userdata' => $userdata);
+		$data = array ('userdata' => $userdata,'getorganization'=>$this->getorganization,'getprcesses'=>$this->getprcesses);
 		$this->load->view('siteadmin/addprocesses',$data);
 	}
 	// End here
@@ -399,7 +462,8 @@ class Admin extends CI_Controller {
 		$data = array
 				(
 					'userdata'	=>	$userdata,
-					'getdata'	=>	$getdata
+					'getdata'	=>	$getdata,
+					'getorganization'=>$this->getorganization,'getprcesses'=>$this->getprcesses
 				);
 		$this->load->view('siteadmin/allprocesses',$data);
 	}
@@ -437,7 +501,8 @@ class Admin extends CI_Controller {
 			$data = array
 				(
 					'userdata'	=>	$userdata,
-					'getdata'	=>	$getdata
+					'getdata'	=>	$getdata,
+					'getorganization'=>$this->getorganization,'getprcesses'=>$this->getprcesses
 				);
 			
 			$this->load->view('siteadmin/editprocesses',$data);
@@ -478,7 +543,8 @@ class Admin extends CI_Controller {
 			$data = array
 				(
 					'userdata'	=>	$userdata,
-					'getdata'	=>	$getdata
+					'getdata'	=>	$getdata,
+					'getorganization'=>$this->getorganization,'getprcesses'=>$this->getprcesses
 				);
 			$this->load->view('siteadmin/addsubprocesses',$data);
 		}
@@ -532,7 +598,8 @@ class Admin extends CI_Controller {
 				(
 					'userdata'	=>	$userdata,
 					'getdata'	=>	$getdata,
-					'getsubpro'	=>	$getsubpro
+					'getsubpro'	=>	$getsubpro,
+					'getorganization'=>$this->getorganization,'getprcesses'=>$this->getprcesses
 				);
 			$this->load->view('siteadmin/editsubprocesses',$data);
 		}
@@ -550,6 +617,8 @@ class Admin extends CI_Controller {
 		$data = array
 				(
 					'userdata'	=>	$userdata,
+					'getorganization'=>$this->getorganization,
+					'getprcesses'=>$this->getprcesses
 					 
 				);
 		$this->load->view('siteadmin/subprocesses',$data);

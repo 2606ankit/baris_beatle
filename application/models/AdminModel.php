@@ -26,6 +26,29 @@
 			 //return $result;		
 		}
 
+		// get all orgnization start here
+		public function getallorgnization()
+		{
+			$data = $this->db->select("*")
+					->from("baris_organization")
+					->where("status !=",DELETE_STATUS)
+					->get();
+			$result = $data->result();		
+			return $result;
+		}
+		// end here
+		// get orgnization by id
+		public function getorganizationbyId($orgid)
+		{
+			$data = $this->db->select("*")
+					->from("baris_organization")
+					->where("id",$orgid)
+					->where("status !=",DELETE_STATUS)
+					->get();
+			$result = $data->result();
+			return $result;
+		}
+		// end here
 
 		// Check Devision If Already In database
 		public function checkdevision($checkvalue)
@@ -73,6 +96,17 @@
 			$result = $data->result();
 			return $result;		
 
+		}
+		// end here
+		// check if orgnization is already 
+		public function checkorgnization($orgname)
+		{
+			$data = $this->db->select("*")
+					->from("baris_organization")
+					->where("organization_name",$orgname)
+					->get();
+			$result = $data->result();
+			return $result;		
 		}
 		// end here
 		// check if useremail already in database
@@ -159,8 +193,86 @@
 					->where("buser.status !=",DELETE_STATUS)
 					->where("buser.id",$ownerid)
 					->get();
+
 			$result = $data->result();
 			return $result;
+		}
+		// end here
+		// get all contractor start here
+		public function getallcontractor()
+		{
+			$data = $this->db->select("buser.id as id, buser.first_name as first_name,buser.last_name as last_name,buser.user_email as user_email,buser.username as username,buser.user_phone as user_phone ,buser.status as status,buser.created_date as created_date,buser.user_type as user_type, bcon.contractor_id as contractor_id,bcon.owner_id as owner_id,bcon.organization_id as organization_id,bcon.devision_id as devision_id,bcon.station_id as station_id,bcon.processes_id as processes_id")
+					->from("baris_user as buser")
+					->join("baris_contractor as bcon","bcon.contractor_id = buser.id")
+					->where("buser.user_type",CONTRACTOR)
+					->where("buser.status !=",DELETE_STATUS)
+					->get();
+			$result = $data->result();
+			return json_encode($result);		
+		}
+		// end here
+		// check all information of contractor before insert value
+		// if devision id , station id , owner id , and processes id should not be same if not conratctor will be insert
+		public function checkcontratorInfo($ownerdetail,$useremail,$proidcheck,$firstname,$lastname,$username,$phone,$passwrod,$loginuserid,$orgid)
+		{
+			$ownerinfo 	= explode('|', $ownerdetail);
+			$ownerid 	= $ownerinfo[0];
+			$devisionid = $ownerinfo[1];
+			$stationid 	= $ownerinfo[2];
+
+			$data = $this->db->select("user_email")
+					->from("baris_user")
+					->where("user_email",$useremail)
+					->get();
+			$result = $data->result();
+			if (empty($result)){
+				$insertdata = array(
+									'username'		=>	$username,
+									'user_password'	=>	md5($passwrod),
+									'first_name'	=>	$firstname,
+									'last_name'		=>	$lastname,
+									'user_email'	=>	$username,
+									'user_phone'	=>	$phone,
+									'user_type'		=>	CONTRACTOR,
+									'created_date'	=>	TODAY_DATE,
+									'created_by'	=>	$loginuserid
+								);
+				$insertquery = $this->db->insert("baris_user",$insertdata);
+				if ($insertquery){
+					$lastid = $this->db->insert_id();
+					$continsert = array(
+										'contractor_id'	=>	$lastid,
+										'owner_id'		=>	$ownerid,
+										'organization_id'	=>	$orgid,
+										'devision_id'		=>	$devisionid,
+										'station_id'		=>	$stationid,
+										'processes_id'		=>	$proidcheck,
+										'created_date'		=>	TODAY_DATE
+									);
+					$query = $this->db->insert("baris_contractor",$continsert);
+					if ($query){
+						return true;
+					}
+				}
+			}
+			else {
+				$userid = $result[0]->id;
+				$checkcon = $this->db->select("*")
+							->from("baris_contractor")
+							->where("contractor_id",$userid)
+							->where("owner_id",$ownerid)
+							->where("devision_id",$devisionid)
+							->where("station_id",$stationid)
+							->where_in("processes_id",$proidcheck)
+							->get();
+				$res = $checkcon->result();
+				if (empty($res)){
+					return true;
+				}
+				else {
+					return false;
+				}
+			}					
 		}
 		// end here
 		// Get all prossess With their sub processes
@@ -197,6 +309,20 @@
 
 		}
 		// end here
+		// get processes multiple string
+		public function getprocessesMultiAccId($proid)
+		{
+			$data = $this->db->select("*")
+					->from("baris_processes")
+					->where_in("id ",$proid)
+					->get();
+					//echo $this->db->last_query();
+			$result = $data->result();
+			return $result;		
+
+		}
+
+		// end here
 		
 		// Change Status Start from here
 		public function changestatus($tablename,$statuvalue,$statusid)
@@ -221,7 +347,18 @@
 			return $result;		
 		}
 		// end here
-
+		// get station by id
+		public function getstationById($staid)
+		{
+			$data = $this->db->select("*")
+					->from("baris_station")
+					->where("id",$staid)
+					->where("status !=",DELETE_STATUS)
+					->get();
+			$result = $data->result();		
+			return $result;
+		}
+		// end here
 		// check station by name
 		public function checkstation($owner_station,$loginuserid)
 		{

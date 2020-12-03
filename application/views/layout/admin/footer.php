@@ -43,7 +43,8 @@
 	<script src="<?php echo ASSETS_URL?>js/custom_validation.js"></script>
 		<script src="<?php echo ASSETS_URL; ?>js/demo/email-inbox.demo.js"></script>
 
-		  <script>
+<script>
+	// get all station here
   $( function() {
     var availableTags = [
     <?php
@@ -52,33 +53,30 @@
     		echo '"'.$v->station_name.'",';
     	}
      ?>
-      /*"ActionScript",
-      "AppleScript",
-      "Asp",
-      "BASIC",
-      "C",
-      "C++",
-      "Clojure",
-      "COBOL",
-      "ColdFusion",
-      "Erlang",
-      "Fortran",
-      "Groovy",
-      "Haskell",
-      "Java",
-      "JavaScript",
-      "Lisp",
-      "Perl",
-      "PHP",
-      "Python",
-      "Ruby",
-      "Scala",
-      "Scheme" */
+      
     ];
     $( "#owner_station" ).autocomplete({
       source: availableTags
     });
   } );
+  // end here
+  // get all organization autocomplete
+	  $( function() {
+	    var availableTags1 = [
+	    <?php
+	    //	print_r($getstation);
+	    	foreach ($getorganization as $k=>$v){
+	    		echo '"'.$v->organization_name.'",';
+	    	}
+	     ?>
+	      
+	    ];
+	    $( "#cont_organization" ).autocomplete({
+	      source: availableTags1
+	    });
+	  } );
+
+  // end here
   </script>
 </body>
 </html>
