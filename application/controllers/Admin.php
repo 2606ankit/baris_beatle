@@ -83,12 +83,15 @@ class Admin extends CI_Controller {
 	public function addowner()
 	{
 		if($this->session->userdata('userid') == ''){redirect(ADMIN_URL.'index');} 
-		$userdata = $this->session->userdata();
-		$getdevision = $this->AdminModel->getalldevision();
-		$loginuserid = $this->session->userdata('userid');
-		
+		$userdata 	 = 	$this->session->userdata();
+		$getdevision =  $this->AdminModel->getalldevision();
+		$loginuserid =  $this->session->userdata('userid');
+		$usertype 	 =  OWNER_UNIQ;
+		$uniqueId	 =	$this->AdminModel->uniqueId($usertype);
+
 		//echo '<pre>'; print_r($getstation); die;
 		if (!empty($_POST) && !empty($_POST['owner_username'])){
+			//echo $uniqueId; die;
 	 //	 echo '<pre>'; print_r($_POST);
 	 //echo  $processes_id = implode('|', $this->input->post('processes')); die;
 	 	  
@@ -110,6 +113,7 @@ class Admin extends CI_Controller {
 		//	echo '<pre>'; print_r($checkstation); die;
 			$insertarry	=	array
 							(
+								'user_unique_id'=>	$uniqueId,
 								'username'		=>	$this->input->post('owner_username'),
 								'user_password'	=>	md5($this->input->post('owner_password')),
 								'first_name '	=>	$this->input->post('owner_firstname'),
@@ -261,6 +265,8 @@ class Admin extends CI_Controller {
 		$getallstation 	= 	$this->AdminModel->getallstation();
 		$loginuserid 	= 	$this->session->userdata('userid');
 		$getallcontractor = $this->AdminModel->getallcontractor();
+		
+
 		$data = array
 				(
 					'userdata' 			=> 	$userdata, 
@@ -281,9 +287,11 @@ class Admin extends CI_Controller {
 		$getallstation 	= 	$this->AdminModel->getallstation();
 		$loginuserid 	= 	$this->session->userdata('userid');
 		$getowner 		=	$this->AdminModel->getallowner();
+		$usertype 		=	CONTRACTOR_UNIQ;
+ 		$uniqueId	=	$this->AdminModel->uniqueId($usertype);
 		//echo '<pre>'; print_r(json_decode($getowner)); die;
 		if (!empty($_POST) && !empty($_POST['cont_organization'])){
-			 
+			// echo '<pre>'; print_r($_POST); die;
 			$orgname = $this->input->post('cont_organization');
 			$checkorg = $this->AdminModel->checkorgnization($orgname);
 			if (!empty($checkorg)){
@@ -306,8 +314,9 @@ class Admin extends CI_Controller {
 			$phone 	 	 = $this->input->post('cont_phone');
 			$passwrod 	 = $this->input->post('cont_password');
 			$processesId = $this->input->post('processes');
-
-			$proidcheck  = implode(",",$processesId);
+			 
+			echo $proidcheck  = implode(",",$processesId);
+			 
 			$checkcontractor = $this->AdminModel
 								->checkcontratorInfo(
 									$ownerdetail,
@@ -315,9 +324,10 @@ class Admin extends CI_Controller {
 									$proidcheck,
 									$firstname,
 									$lastname,
-									$username,$phone,$passwrod,$loginuserid,$orgid
+									$username,$phone,$passwrod,$loginuserid,$orgid,$uniqueId
 								);
 			if($checkcontractor == true){
+				redirect(ADMIN_URL.'contractor');
 				$this->session->set_flashdata('success', 'New Contractor Added Successfully');
 			}
 
@@ -330,6 +340,131 @@ class Admin extends CI_Controller {
 				'getorganization'=>$this->getorganization
 				);
 		$this->load->view('siteadmin/addcontractor',$data);
+	}
+	// end here
+
+	// edit contractor inforation start here
+	public function editcontractor()
+	{
+		$conid = base64_decode($this->uri->segment(3));
+		if($this->session->userdata('userid') == ''){redirect(ADMIN_URL.'index');} 
+		$userdata 		= 	$this->session->userdata(); 
+		$loginuserid 	= 	$this->session->userdata('userid');
+		$getowner 		=	$this->AdminModel->getallowner();
+		$getcontractor  =	$this->AdminModel->getcontractorById($conid);
+		//echo '<pre>'; print_r(json_decode($getcontractor)); die;
+
+		if (!empty($_POST) && !empty($_POST['cont_firstname'])){
+			$cont_firstname = 	$this->input->post('cont_firstname');
+			$cont_lastname	=	$this->input->post('cont_lastname');
+			$cont_username	=	$this->input->post('cont_username');
+			$cont_email		=	$this->input->post('cont_email');
+			$cont_phone		=	$this->input->post('cont_phone');
+			if (!empty($_POST['cont_password'])){
+				$pass = md5($_POST['cont_password']);
+			}else { $pass = $_POST['prepass'];}
+
+			$update = array (
+
+						'first_name'	=>	$cont_firstname,
+						'last_name'		=>	$cont_lastname,
+						'user_email'	=>	$cont_email,
+						'user_phone'	=>	$cont_phone,
+						'user_password'	=>	$pass
+						);
+			$updatepass = $this->db->where("id",$conid)->update('baris_user',$update);
+			if ($updatepass){
+				redirect(ADMIN_URL.'contractor');
+				$this->session->set_flashdata('success', 'Contractor Updated Successfully');
+			}
+		}
+
+		$data = array(
+					'userdata'			=>	$userdata,
+					  
+					'getowner'			=>	json_decode($getowner),
+					'getstation'		=>	$this->getstation,
+					'getorganization'	=>	$this->getorganization,
+					'getcontractor'		=>	json_decode($getcontractor)
+				);
+
+		$this->load->view('siteadmin/editcontractor',$data);
+	}
+	// end here
+	// Show Contractor details start here
+	public function showcontractor()
+	{
+		$conid = base64_decode($this->uri->segment(3));
+		if($this->session->userdata('userid') == ''){redirect(ADMIN_URL.'index');} 
+		$userdata 		= 	$this->session->userdata(); 
+		$loginuserid 	= 	$this->session->userdata('userid');
+		$getowner 		=	$this->AdminModel->getallowner();
+		$getcontractor  =	$this->AdminModel->getcontractorById($conid);
+		echo '<pre>'; print_r(json_decode($getcontractor)); die;
+		$data = array(
+					'userdata'			=>	$userdata,
+					'getowner'			=>	json_decode($getowner),
+					'getstation'		=>	$this->getstation,
+					'getorganization'	=>	$this->getorganization,
+					'getcontractor'		=>	json_decode($getcontractor)
+				);
+		$this->load->view('siteadmin/showcontractor');
+	}
+	// end here
+	// Add Line Manage Start here
+	public function addlinemanager()
+	{
+
+		if($this->session->userdata('userid') == ''){redirect(ADMIN_URL.'index');} 
+		$userdata 		= 	$this->session->userdata(); 
+		$loginuserid 	= 	$this->session->userdata('userid');
+		$getowner 		=	$this->AdminModel->getallowner(); 
+		$getcontractorWithOrg = $this->AdminModel->getcontractorWithOrg();
+		$usertype 		=	MANAGER_UNIQ;
+ 		$uniqueId	=	$this->AdminModel->uniqueId($usertype);
+		 //echo '<pre>'; print_r(json_decode($getcontractorWithOrg)); die;
+		if (!empty($_POST) && !empty($_POST['line_firstname'])){
+			//echo '<pre>'; print_r($_POST); die;
+			$intarray = array(
+							'user_unique_id'	=>	$uniqueId,
+							'username'			=>	$this->input->post('line_username'),
+							'first_name'		=>	$this->input->post('line_firstname'),
+							'last_name'			=>	$this->input->post('line_lastname'),
+							'user_email'		=>	$this->input->post('line_email'),
+							'user_phone'		=>	$this->input->post('line_phone'),
+							'user_type'			=>	LINE_MANAGER,
+							'created_by'		=>	$loginuserid,
+							'created_date'		=>	TODAY_DATE
+						);
+			$insertquery = $this->db->insert("baris_user",$intarray);
+			$lastid = $this->db->insert_id();
+			if ($insertquery){
+				$odata = explode('|',$_POST['line_contracter']);
+				$conid = $odata[0];
+				$orgid = $odata[1]; 
+				$inserlinedata = array(
+									'manager_id'		=>	$lastid,
+									'contractor_id'		=>	$conid,
+									'organization_id'	=>	$orgid,
+									'created_by'		=>	$loginuserid,
+									'created_date'		=>	TODAY_DATE
+								);
+				$query = $this->db->insert("baris_linemanager",$inserlinedata);
+				if ($query)
+				{
+					$this->session->set_flashdata("success","Line Manager Added Successfully");
+				}
+			}
+
+		}
+		$data = array(
+					'userdata'			=>	$userdata,
+					'getowner'			=>	json_decode($getowner),
+					'getstation'		=>	$this->getstation,
+					'getorganization'	=>	$this->getorganization, 
+					'getcontractor'		=>	json_decode($getcontractorWithOrg)
+				);
+		$this->load->view('siteadmin/addlinemanager',$data);
 	}
 	// end here
 	// Add Devision Start Here
@@ -352,7 +487,7 @@ class Admin extends CI_Controller {
 				$this->session->set_flashdata('success', 'New Devision Added Successfully');
 			}	
 		}
-		$data = array ('userdata' => $userdata,'getorganization'=>$this->getorganization,'getprcesses'=>$this->getprcesses);
+		$data = array ('userdata' => $userdata,'getorganization'=>$this->getorganization,'getprcesses'=>$this->getprcesses,'getstation'	=>		$this->getstation);
 		$this->load->view('siteadmin/add_division' , $data);
 	}
 	// End Here
@@ -362,7 +497,12 @@ class Admin extends CI_Controller {
 		if($this->session->userdata('userid') == ''){redirect(ADMIN_URL.'index');} 
 		$userdata = $this->session->userdata();
 		$getalldevision = $this->AdminModel->getalldevision();
-		$data = array('getalldevision' => $getalldevision , 'userdata' => $userdata,'getorganization'=>$this->getorganization,'getprcesses'=>$this->getprcesses);
+		$data = array('getalldevision' => $getalldevision , 
+					'userdata' => $userdata,
+					'getorganization'=>$this->getorganization,
+					'getprcesses'=>$this->getprcesses,
+					'getstation'	=>		$this->getstation
+				);
 		$this->load->view('siteadmin/alldevision',$data);
 	}
 	// end here

@@ -23,4 +23,11 @@
 	define('LINE_MANAGER','4');
 	// end here
 
+	// uniueq name start here
+	define('OWNER_UNIQ', 'OWN');
+	define('CONTRACTOR_UNIQ', 'CON');
+	define('MANAGER_UNIQ', 'LINE');
+
+	// end here
+
 ?>

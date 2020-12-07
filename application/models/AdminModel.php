@@ -211,9 +211,39 @@
 			return json_encode($result);		
 		}
 		// end here
+
+		// get contractor details by ID
+		public function getcontractorById($conid)
+		{
+			$data = $this->db->select("buser.id as id,buser.user_unique_id as user_unique_id,buser.user_password as user_password, buser.first_name as first_name,buser.last_name as last_name,buser.user_email as user_email,buser.username as username,buser.user_phone as user_phone ,buser.status as status,buser.created_date as created_date,buser.user_type as user_type, bcon.contractor_id as contractor_id,bcon.owner_id as owner_id,bcon.organization_id as organization_id,bcon.devision_id as devision_id,bcon.station_id as station_id,bcon.processes_id as processes_id")
+					->from("baris_user as buser")
+					->join("baris_contractor as bcon","bcon.contractor_id = buser.id")
+					->where("buser.user_type",CONTRACTOR)
+					->where("buser.id ",$conid)
+					->get();
+			$result = $data->result();
+			return json_encode($result);
+		}
+		// end here
+
+		// Get All Contractor With Their orgnization information start here
+		public function getcontractorWithOrg()
+		{
+			$data = $this->db->select("buser.id as id,buser.status as status,buser.first_name as first_name,buser.last_name as last_name,bcon.contractor_id as contractor_id,bcon.organization_id as orgId,borg.id as oID,borg.organization_name as organization_name,buser.user_type as user_type")
+					->from("baris_user as buser")
+					->join("baris_contractor as bcon","bcon.contractor_id = buser.id")
+					->join("baris_organization as borg","borg.id = bcon.organization_id ")
+					->where("buser.user_type",CONTRACTOR)
+					->where("buser.status",ACTIVE_STATUS)
+					->get();
+			$result = $data->result();
+			return json_encode($result);		
+		}
+		// end here
+
 		// check all information of contractor before insert value
 		// if devision id , station id , owner id , and processes id should not be same if not conratctor will be insert
-		public function checkcontratorInfo($ownerdetail,$useremail,$proidcheck,$firstname,$lastname,$username,$phone,$passwrod,$loginuserid,$orgid)
+		public function checkcontratorInfo($ownerdetail,$useremail,$proidcheck,$firstname,$lastname,$username,$phone,$passwrod,$loginuserid,$orgid,$uniqueId)
 		{
 			$ownerinfo 	= explode('|', $ownerdetail);
 			$ownerid 	= $ownerinfo[0];
@@ -227,22 +257,23 @@
 			$result = $data->result();
 			if (empty($result)){
 				$insertdata = array(
-									'username'		=>	$username,
-									'user_password'	=>	md5($passwrod),
-									'first_name'	=>	$firstname,
-									'last_name'		=>	$lastname,
-									'user_email'	=>	$username,
-									'user_phone'	=>	$phone,
-									'user_type'		=>	CONTRACTOR,
-									'created_date'	=>	TODAY_DATE,
-									'created_by'	=>	$loginuserid
+									'user_unique_id'	=>	$uniqueId,
+									'username'			=>	$username,
+									'user_password'		=>	md5($passwrod),
+									'first_name'		=>	$firstname,
+									'last_name'			=>	$lastname,
+									'user_email'		=>	$username,
+									'user_phone'		=>	$phone,
+									'user_type'			=>	CONTRACTOR,
+									'created_date'		=>	TODAY_DATE,
+									'created_by'		=>	$loginuserid
 								);
 				$insertquery = $this->db->insert("baris_user",$insertdata);
 				if ($insertquery){
 					$lastid = $this->db->insert_id();
 					$continsert = array(
-										'contractor_id'	=>	$lastid,
-										'owner_id'		=>	$ownerid,
+										'contractor_id'		=>	$lastid,
+										'owner_id'			=>	$ownerid,
 										'organization_id'	=>	$orgid,
 										'devision_id'		=>	$devisionid,
 										'station_id'		=>	$stationid,
@@ -401,5 +432,14 @@
 			return $finalarr;
 		}
 		// end here
+
+		// create unique Id Start Here
+		public function uniqueId($usertype)
+		{
+			$time = substr(md5(strtotime(TODAY_DATE)),-7);
+			$unique = $usertype.'_'.$time;
+			return $unique;
+		}
+		// end here 
 	}
 ?>

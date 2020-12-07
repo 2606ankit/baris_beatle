@@ -36,40 +36,46 @@
 			<!-- begin page-header -->
 			<h1 class="page-header">All Processes</h1>
 			<div class="row">
-				<div class="col-xl-12 ui-sortable">
+				 
+				<!-- end col-2 -->
+				<!-- begin col-10 -->
+				<div class="col-xl-12">
 					<!-- begin panel -->
-					<div class="panel panel-inverse" data-sortable-id="table-basic-7">
+					<div class="panel panel-inverse">
 						<!-- begin panel-heading -->
-						<div class="panel-heading ui-sortable-handle">
-							<h4 class="panel-title">All Processes <span class="label label-success m-l-5 t-minus-1">NEW</span></h4>
+						<div class="panel-heading">
+							<h4 class="panel-title">All Contractor</h4>
 							 
 						</div>
 						<!-- end panel-heading -->
+					 
 						<!-- begin panel-body -->
 						<div class="panel-body">
-							<!-- begin table-responsive -->
-						 <table id="data-table-default" class="table table-striped table-bordered table-td-valign-middle">
-						<thead>
-							<tr>
-								<th width="1%">No.</th>
-								<th class="text-nowrap">Processes Short Name</th>
-								<th class="text-nowrap">Processes Full Name</th>
-								<th class="text-nowrap">Add Sub Processes</th>
-								<th class="text-nowrap">Created Date</th>
-								<th class="text-nowrap">Status</th>
-								<th class="text-nowrap">Action</th>
-							</tr>
-						</thead>
-
-						<tbody>
-							<?php 
+							<table id="data-table-buttons" class="table table-striped table-bordered table-td-valign-middle">
+								<thead>
+									<tr>
+											<tr>
+												<th width="1%">No.</th>
+												<th class="text-nowrap">Processes Short Name</th>
+												<th class="text-nowrap">Processes Full Name</th>
+												<th class="text-nowrap">Add Sub Processes</th>
+												<th class="text-nowrap">Created Date</th>
+												<th class="text-nowrap">Status</th>
+												<th class="text-nowrap">Action</th>
+												<th class="text-nowrap"></th>
+											</tr>
+									</tr>
+								</thead>
+								<tbody>
+									 
+									<?php 
 								 if (!empty($getdata)){
 								 	foreach ($getdata as $key=>$val){
 								 		$date = date('d, M Y',strtotime($val->created_date));
 								 		if ($val->status == ACTIVE_STATUS){
-								 			$status = '<span class="label label-success m-l-5 t-minus-1">Active</span>';
+								 			$status = '<span class="label label-success m-l-5 t-minus-1" style="background-color:yellow;color:#000;">Active</span>';
 								 		}else {
-								 			$status = '<span class="btn btn-warning">Inactive</span>';
+								 			$status = '<span class="label label-success m-l-5 t-minus-1" style="background-color:red;color:#000;">Inactive</span>';
 								 		}
 								 	$proid = $val->id;
 								 	$subpro = $this->AdminModel->getallSubProcessesByProcessesId($proid);
@@ -96,17 +102,23 @@
 									<td><?php echo $status; ?></td>
 
 									<td>
-											<a href="javascript:;" class="btn btn-primary">Action</a>
-											<a href="#" data-toggle="dropdown" class="btn btn-primary dropdown-toggle" aria-expanded="false"><b class="caret"></b></a>
-											<div class="dropdown-menu dropdown-menu-right" x-placement="top-end"  >
-												 
-												<a href="<?php echo ADMIN_URL;?>editprocesses/<?php echo base64_encode($val->id); ?>" class="dropdown-item">Edit</a>
-												<a href="javascript:;"  class="dropdown-item changestatus" data-status="2" data-tablename="processes" data-mainid="<?php echo $val->id;?>">Delete</a>
-												 
-												<a href="javascript:;" class="dropdown-item changestatus" data-status="0" data-tablename="processes" data-mainid="<?php echo $val->id;?>">Inactive</a>
-												<a href="javascript:;" class="dropdown-item changestatus" data-status="1" data-tablename="processes" data-mainid="<?php echo $val->id;?>">Active</a>
-												 
-											</div>
+
+										<div class="btn-group">
+													<a href="#" class="btn btn-white btn-sm width-90">Settings</a>
+													<a href="#" class="btn btn-white btn-sm dropdown-toggle width-30 no-caret" data-toggle="dropdown">
+													<span class="caret"></span>
+													</a>
+													<div class="dropdown-menu dropdown-menu-right">
+														<a href="<?php echo ADMIN_URL;?>editprocesses/<?php echo base64_encode($val->id); ?>" class="dropdown-item">Edit</a>
+														<a href="javascript:;"  class="dropdown-item changestatus" data-status="2" data-tablename="processes" data-mainid="<?php echo $val->id;?>">Delete</a>
+														 
+														<a href="javascript:;" class="dropdown-item changestatus" data-status="0" data-tablename="processes" data-mainid="<?php echo $val->id;?>">Inactive</a>
+														<a href="javascript:;" class="dropdown-item changestatus" data-status="1" data-tablename="processes" data-mainid="<?php echo $val->id;?>">Active</a>
+													</div>
+												</div>
+
+
+											 
 									</td>
 									<td>
 									</td>
@@ -120,33 +132,17 @@
 						 			<td colspan="5" style="text-align: center;"><a href="<?php echo ADMIN_URL ?>addprocesses">Click To Add New Processes</a></td>
 						 		</tr>
 							<?php }?>
-							<tr class="gradeU">
-								<th width="1%">No</th>
-								<th class="text-nowrap">Processes Short Name</th>
-								<th class="text-nowrap">Processes Full Name</th>
-								<th class="text-nowrap">Add Sub Processes</th>
-								<th class="text-nowrap">Created Date</th>
-								<th class="text-nowrap">Status</th>
-								<th class="text-nowrap">Action</th>
-							</tr>
-						</tbody>
-					</table>
-							<!-- end table-responsive -->
+									 
+								</tbody>
+							</table>
 						</div>
 						<!-- end panel-body -->
-						<!-- begin hljs-wrapper -->
-					
-						<!-- end hljs-wrapper -->
 					</div>
 					<!-- end panel -->
-					<!-- begin panel -->
-				
-					<!-- end panel -->
-					<!-- begin panel -->
-					
-					<!-- end panel -->
 				</div>
+				<!-- end col-10 -->
 			</div>
+			 
 		</div>
 
 <?php 

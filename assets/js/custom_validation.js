@@ -218,6 +218,90 @@ $(document).ready(function(){
    //  Add Owner Form validation start here
    $("#add_contractor").validate({
 	    rules: {
+	       cont_organization:{
+	       	required: true,
+	       },
+	       cont_username: {
+	       	required : true,
+	       },
+	       cont_owner: {
+	       	required : true,
+	       },
+	      cont_firstname : {
+	        required: true,
+	      },
+	      cont_lastname : {
+	        required: true,
+	      },
+	      cont_email : {
+	        required: true,
+	        email : true,
+	      },
+	        
+	      cont_phone : {
+	        required: true,
+	        number:true,
+	        minlength : 10,
+	        maxlength : 10,
+
+	      },
+	      cont_password : {
+	        
+	        minlength : 8,
+	       },
+	      cont_rep_password : {
+	        
+	       equalTo: "#cont_password",
+	       },
+	    },
+	    messages : {
+		 cont_organization:{
+		 	required :  "Organization name should not be empty",
+		 },
+		 cont_username:{
+		 	required :  "Username should not be empty",
+		 },
+		  cont_firstname: {
+		    required: "First Name should not be empty",
+		  },
+		  cont_lastname: {
+		    required: "Last name should not be empty",
+		  },
+		 cont_email : {
+	        required: "Email should not be empty",
+	        email : "Email should be in right formate",
+	      },
+		  
+		  cont_phone: {
+		    required: "Mobile Number should not be empty",
+		    number: "Mobile Number should Numeric",
+		    min: "Mobile Number should be min 10 digit",
+		  },
+		  cont_username: {
+		    required: "Username should not be empty",
+			remote: jQuery.validator.format("{0} is already taken. Please choose another username. ")
+		  },
+		  cont_email: {
+		    required: "Email should not be empty",
+			remote: jQuery.validator.format("{0} is already taken. Please choose another Email. ")
+		  },
+		  cont_password: {
+		    required: "Password Should not be blank",
+			minlength: "Password Should have minimum 8 digit",
+		  },
+		 
+		  cont_rep_password: {
+		    required: "Password Should not be blank",
+			equalto: "Password does not match",
+		  },
+		}
+		
+	  });
+
+   // end here
+   //  Add Owner Form validation start here
+   $("#edit_contractor").validate({
+	    rules: {
 	      cont_organization : {
 	        required: true,
 	      },
@@ -303,6 +387,90 @@ $(document).ready(function(){
 		
 	  });
 
+   // end here
+
+   // Validation for add line manage 
+  $("#add_linemanager").validate({
+	    rules: {
+	      line_contracter : {
+	        required: true,
+	      },
+	      line_firstname : {
+	        required: true,
+	      },
+	      line_lastname : {
+	        required: true,
+	      },
+	      line_username : {
+	        required: true,
+	        remote : {
+	   				url:  base_url+'checkusername',
+			        type: "post",
+			      	data: {owner_username: function() {return $('#line_username').val();}}
+	   		}
+	      },
+	      
+	      line_email : {
+	        required: true,
+	        email : true,
+	   		remote : {
+	   				url:  base_url+'chackuseremail',
+			        type: "post",
+			      	data: {owner_email: function() {return $('#line_email').val();}}
+	   		}
+	      },
+	      line_phone : {
+	        required: true,
+	        number:true,
+	        minlength : 10,
+	        maxlength : 10,
+
+	      },
+	      line_password : {
+	        required: true,
+	        minlength : 8,
+	       },
+	      cont_rep_password : {
+	        
+	       equalTo: "#cont_password",
+	       },
+	    },
+	    messages : {
+		  line_contracter: {
+		    required: "Organization name should not be empty",
+		  },
+		  line_firstname: {
+		    required: "First Name should not be empty",
+		  },
+		  line_lastname: {
+		    required: "Last name should not be empty",
+		  },
+		  
+		  line_phone: {
+		    required: "Mobile Number should not be empty",
+		    number: "Mobile Number should Numeric",
+		    min: "Mobile Number should be min 10 digit",
+		  },
+		  line_username: {
+		    required: "Username should not be empty",
+			remote: jQuery.validator.format("{0} is already taken. Please choose another username. ")
+		  },
+		  line_email: {
+		    required: "Email should not be empty",
+			remote: jQuery.validator.format("{0} is already taken. Please choose another Email. ")
+		  },
+		  line_password: {
+		    required: "Password Should not be blank",
+			minlength: "Password Should have minimum 8 digit",
+		  },
+		 
+		  line_rep_password: {
+		    required: "Password Should not be blank",
+			equalto: "Password does not match",
+		  },
+		}
+		
+	  });
    // end here
    // end here
 
