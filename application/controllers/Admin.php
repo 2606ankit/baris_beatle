@@ -265,7 +265,7 @@ class Admin extends CI_Controller {
 		$getallstation 	= 	$this->AdminModel->getallstation();
 		$loginuserid 	= 	$this->session->userdata('userid');
 		$getallcontractor = $this->AdminModel->getallcontractor();
-		
+		//echo '<pre>'; print_r(json_decode($getallcontractor)); die;
 
 		$data = array
 				(
@@ -273,7 +273,7 @@ class Admin extends CI_Controller {
 					'getstation'		=>	$this->getstation,
 					'getprocsses'		=>	$this->getprcesses,
 					'getorganization'	=>	$this->getorganization,
-					'getallcontractor'	=>	json_decode($getallcontractor)
+					'getallcontractor'	=>	array_unique(json_decode($getallcontractor),SORT_REGULAR)
 				);
 				//echo '<pre>'; print_r(json_decode($getallcontractor)); die;
 		$this->load->view('siteadmin/allcontractor',$data);
@@ -315,7 +315,7 @@ class Admin extends CI_Controller {
 			$passwrod 	 = $this->input->post('cont_password');
 			$processesId = $this->input->post('processes');
 			 
-			echo $proidcheck  = implode(",",$processesId);
+			$proidcheck  = implode(",",$processesId);
 			 
 			$checkcontractor = $this->AdminModel
 								->checkcontratorInfo(
@@ -400,18 +400,81 @@ class Admin extends CI_Controller {
 		$loginuserid 	= 	$this->session->userdata('userid');
 		$getowner 		=	$this->AdminModel->getallowner();
 		$getcontractor  =	$this->AdminModel->getcontractorById($conid);
-		echo '<pre>'; print_r(json_decode($getcontractor)); die;
+
+		$getlinemanager = $this->AdminModel->getLineManagerByConId($conid);
+		$getownerbyCon = $this->AdminModel->getOwnerAccToCon($conid);
+		//$getconowner = $this->AdminModel->getcontractorById($conid);
+			  //echo '<pre>'; print_r($getownerbyCon); die;
 		$data = array(
 					'userdata'			=>	$userdata,
 					'getowner'			=>	json_decode($getowner),
 					'getstation'		=>	$this->getstation,
 					'getorganization'	=>	$this->getorganization,
-					'getcontractor'		=>	json_decode($getcontractor)
+					'getcontractor'		=>	json_decode($getcontractor),
+					'linemanagecount'	=>	$getlinemanager,
+					'getownerbyCon'		=>	$getownerbyCon,
 				);
-		$this->load->view('siteadmin/showcontractor');
+
+		$this->load->view('siteadmin/showcontractor',$data);
 	}
 	// end here
-	// Add Line Manage Start here
+	// add New Processes To Contractor at show detail page Start here
+		public function addnewprocessesContractor()
+		{
+			$cont_owner_add = 	$this->input->post('cont_owner_add');
+			$processes 		= 	$this->input->post('processes');
+			$condetail 		= 	explode('|',$cont_owner_add);
+			$ownerid 		= 	$condetail[0];
+			$divid  		= 	$condetail[1];
+			$stationid 		= 	$condetail[2];
+			$contrctorid 	= 	$condetail[3];
+			$conorg 		= 	$condetail[4]; 
+			$processid 		=	implode(',',$processes);
+
+			$checkcontdetails = $this->db->select("*")
+								->from("baris_contractor")
+								->where("contractor_id",$contrctorid)
+								->where("owner_id",$ownerid)
+								->where("organization_id",$conorg)
+								->where("devision_id",$divid)
+								->where("station_id",$stationid)
+								//->where_in("processes_id",$cont_owner_add)
+								->get();
+			$checkquery = 	$checkcontdetails->result();
+			if (empty($checkquery))
+			{
+				$insertdata = array(
+									'contractor_id'		=>	$contrctorid,
+									'owner_id'			=>	$ownerid,
+									'organization_id'	=>	$conorg,
+									'devision_id'		=>	$divid,
+									'station_id'		=>	$stationid,
+									'processes_id'		=>	$processid,
+									'created_date'		=>	TODAY_DATE
+								);
+			//	echo '<pre>'; print_r($insertdata); die;
+				$insertquery = $this->db->insert("baris_contractor",$insertdata);
+				if ($insertquery){
+					redirect(ADMIN_URL.'showcontractor/'.base64_encode($contrctorid));
+				}
+			}		
+			else {
+				$update = array(
+									'contractor_id'		=>	$contrctorid,
+									'owner_id'			=>	$ownerid,
+									'organization_id'	=>	$conorg,
+									'devision_id'		=>	$divid,
+									'station_id'		=>	$stationid, 
+								);
+				$udpateval = array('processes_id'		=>	$processid,'updated_date'=>TODAY_DATE);
+				$updatequery = $this->db->where($update)->update("baris_contractor",$udpateval);
+				if ($updatequery){
+					redirect(ADMIN_URL.'showcontractor/'.base64_encode($contrctorid));
+				}
+			}					
+		}
+	// end here 
+	// Add Line Manage Start here`
 	public function addlinemanager()
 	{
 
@@ -422,7 +485,9 @@ class Admin extends CI_Controller {
 		$getcontractorWithOrg = $this->AdminModel->getcontractorWithOrg();
 		$usertype 		=	MANAGER_UNIQ;
  		$uniqueId	=	$this->AdminModel->uniqueId($usertype);
-		 //echo '<pre>'; print_r(json_decode($getcontractorWithOrg)); die;
+		 
+		 // echo '<pre>'; print_r(json_decode($getcontractorWithOrg)); die;
+
 		if (!empty($_POST) && !empty($_POST['line_firstname'])){
 			//echo '<pre>'; print_r($_POST); die;
 			$intarray = array(
@@ -462,9 +527,28 @@ class Admin extends CI_Controller {
 					'getowner'			=>	json_decode($getowner),
 					'getstation'		=>	$this->getstation,
 					'getorganization'	=>	$this->getorganization, 
-					'getcontractor'		=>	json_decode($getcontractorWithOrg)
+					'getcontractor'		=>	json_decode($getcontractorWithOrg),
+					//'getcontractor'		=>	array_unique(json_decode($getcontractorWithOrg),SORT_REGULAR)
 				);
 		$this->load->view('siteadmin/addlinemanager',$data);
+	}
+	// end here
+	// show all line manager start here
+	public function linemanager()
+	{
+		if($this->session->userdata('userid') == ''){redirect(ADMIN_URL.'index');} 
+		$userdata = $this->session->userdata();
+		$getalldevision = $this->AdminModel->getalldevision();
+		$getalllinemager = $this->AdminModel->getalllinemager();
+		$data = array(
+					'getalldevision' 	=> 	$getalldevision , 
+					'userdata' 			=> 	$userdata,
+					'getorganization'	=>	$this->getorganization,
+					'getprcesses'		=>	$this->getprcesses,
+					'getstation'		=>	$this->getstation,
+					'getalllinemager'	=>	json_decode($getalllinemager)
+				);
+		$this->load->view('siteadmin/alllinemanager',$data);
 	}
 	// end here
 	// Add Devision Start Here
@@ -846,6 +930,24 @@ class Admin extends CI_Controller {
 		$data = $this->AdminModel->getallprocessAccToOwner($ownerId);
 		print_r(json_encode($data));
 	}
+	// end here
+	// Get all selected processes by owner 
+	public function getallprocessAccToOwnerCon()
+	{
+		$ownerId = $_POST['ownerId'];
+	//	echo $ownerId; die;
+
+		$data = $this->AdminModel->getallprocessAccToOwnerCon($ownerId);
+		//print_r($data); 
+		print_r(json_encode($data));
+	}
+	// end here
+	// get all processes by contractor 
+		public function getallprocessAccToCnontractor()
+		{
+			$conid = $_POST['conID'];
+			$data = $this->AdminModel->getallprocessAccToCnontractor($conid);
+		}
 	// end here
 
 

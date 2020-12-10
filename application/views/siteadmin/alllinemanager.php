@@ -50,8 +50,8 @@
 								<tbody>
 									 
 									<?php 
-								 if (!empty($getallcontractor)){
-								 	foreach ($getallcontractor as $key=>$val){
+								 if (!empty($getalllinemager)){
+								 	foreach ($getalllinemager as $key=>$val){
 								 		$date = date('d, M Y',strtotime($val->created_date));
 								 		 
 								 		if ($val->status == ACTIVE_STATUS){
@@ -103,7 +103,7 @@
 
 						 	?>
 						 		<tr>
-						 			<td colspan="10" style="text-align: center;"><a href="<?php echo ADMIN_URL ?>addcontractor">Click To Add New Contractor</a></td>
+						 			<td colspan="10" style="text-align: center;"><a href="<?php echo ADMIN_URL ?>addlinemanager">Click To Add New Line Manager</a></td>
 						 		</tr>
 							<?php }?>
 									 

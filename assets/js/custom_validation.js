@@ -633,4 +633,56 @@ var i = 0;
    		})
    	})
    // end here
+   // Get all processes according to the owner id
+   	$("#cont_owner_add").change(function(){
+   		var ownerId = $("#cont_owner_add").val();
+   		$("#hideprodiv").show();
+   		 
+   		$.ajax({
+   			type : 'post',
+   			url  : base_url+'getallprocessAccToOwnerCon',
+   			data : {ownerId:ownerId},
+   			success :  function(res){
+   				 
+   				var obj = JSON.parse(res);
+   				var  mainhtml = '';
+   				$.each(obj,function(key,value){
+   					 
+   					 mainhtml += '<div class="col-md-4"><input type="checkbox" name="processes[]" id="processes" value="'+value.id+'">'+value.proname+'</div>';
+   				})
+   				$("#prodiv").html(mainhtml);
+   			}
+   		})
+   	})
+
+ // Get all processes according to the baris_contrator table "id" 
+   	$("#line_contracter").change(function(){
+   		var conID = $("#line_contracter").val();
+   		$("#hideprodiv").show();
+   		 
+   		$.ajax({
+   			type : 'post',
+   			url  : base_url+'getallprocessAccToCnontractor',
+   			data : {conID:conID},
+   			success :  function(res){
+   				 
+   				var obj = JSON.parse(res);
+   				var  mainhtml = '';
+   				$.each(obj,function(key,value){
+   					var processes_val = key.split(',');
+   					// var newobj = JSON.parse(value);
+					 mainhtml += '<div class="col-md-4"><input type="checkbox" name="processes[]" id="processes'+key+'" value="'+processes_val[0]+'">'+processes_val[1]+'</div>';
+					$.each(value,function(k,v){
+						 mainhtml += 'Sub Processes Name : <div class="col-md-4"><input type="checkbox" name="subprocesses[]" id="processes'+k+'" value="'+v.id+'">'+v.sub_processes_name+'</div>';
+					})
+					 
+   				})
+   				$("#prodiv").html(mainhtml);
+   			}
+   		})
+   	})
+
+   	$(".showownerselect").click(function(){
+   		$("#addownerselect").show(200);
+   	})
 })

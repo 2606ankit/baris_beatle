@@ -36,11 +36,12 @@
 									<tr>
 											<tr>
 												<th width="1%">No.</th>
-												<th class="text-nowrap">Unique Id</th>
-												<th class="text-nowrap">Contractor Name</th>
+												<th class="text-nowrap">Owner Name</th>
 												<th class="text-nowrap">Email</th> 
-												<th class="text-nowrap">Username</th>
-												<th class="text-nowrap">User Phone</th>
+												<th class="text-nowrap">Organization</th>
+												<th class="text-nowrap">Devision</th>
+												<th class="text-nowrap">Station</th>
+												<th class="text-nowrap">Processes</th> 
 												<th class="text-nowrap">Status</th>
 												<th class="text-nowrap">Action</th>
 												<th class="text-nowrap"></th>
@@ -59,7 +60,15 @@
 								 		}else {
 								 			$status = '<span class="label label-success m-l-5 t-minus-1" style="background-color:red;color:#000;">Inactive</span>';
 								 		}
-								 		
+								 		$divid = $val->devision_id;
+								 		$orgid = $val->organization_id;
+								 		$staid = $val->station_id;
+								 		$proid = explode(',',$val->processes_id);
+
+								 	$getcondevision = $this->AdminModel->getdevisionbyid($divid);
+								 	$getorgbyId = $this->AdminModel->getorganizationbyId($orgid);
+								 	$getStabyId = $this->AdminModel->getstationById($staid);
+								 	$processesval = $this->AdminModel->getprocessesMultiAccId($proid);
 								 	//echo '<pre>'; print_r($processesval);
 								 	//$proid = $val->id;
 								 //	$subpro = $this->AdminModel->getallSubProcessesByProcessesId($proid);
@@ -67,12 +76,20 @@
 								<tr class="odd gradeX">
 									 
 									<td><?php echo $key+1; ?></td>
-									<td><?php echo $val->user_unique_id; ?></td>
 									<td><?php echo $val->first_name.' '.$val->last_name; ?></td>
 									<td><?php echo $val->user_email; ?></td>
-									<td><?php echo $val->username; ?></td>
-									<td><?php echo $val->user_phone; ?></td>
-									 
+									<td><span class="label label-success m-l-5 t-minus-1" style="color:#000;"><?php echo $getorgbyId[0]->organization_name; ?></span></td> 
+									<td><span class="label label-success m-l-5 t-minus-1" style="color:#000;"><?php echo $getcondevision[0]->devision_name; ?></span></td>
+									<td><span class="label label-success m-l-5 t-minus-1" style="color:#000;"><?php echo $getStabyId[0]->station_name;?></span></td>
+									<td>
+										<?php 
+											foreach ($processesval as $k=>$v){
+										?>
+											<span class="label label-success m-l-5 t-minus-1" style="color:#000;"><?php echo $v->processes_name; ?></span>
+										<?php 
+											}
+										?>
+									</td>
 								 
 									<td><?php echo $status; ?></td>
 

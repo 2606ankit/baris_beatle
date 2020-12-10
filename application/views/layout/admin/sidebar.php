@@ -46,6 +46,17 @@
 							<li><a href="<?php echo ADMIN_URL?>addcontractor"><i class="fas fa-lg fa-fw m-r-10 fa-user-plus"></i> <span>Add Contractor</span></a></li>
 						</ul>
 					</li>
+					<li class="has-sub ">
+						<a href="javascript:;">
+							<b class="caret"></b>
+							<i class="fa fa-th-large"></i>
+							<span>Raiway Line Manage</span>
+						</a>
+						<ul class="sub-menu">
+							<li><a href="<?php echo ADMIN_URL?>linemanager"><i class="fas fa-lg fa-fw m-r-10 fa-users"></i> <span>All Line Manager</span></a></li>
+							<li><a href="<?php echo ADMIN_URL?>addlinemanager"><i class="fas fa-lg fa-fw m-r-10 fa-user-plus"></i> <span>Add Line Manager</span></a></li>
+						</ul>
+					</li>
 					
 					<li class="has-sub ">
 						<a href="javascript:;">

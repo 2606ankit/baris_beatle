@@ -10,3 +10,47 @@
 .modal_processes_heading{
 	font-size:12px;
 }
+
+.details_content
+{
+	width:100%; padding:10px; border:0px solid #000;
+}
+.details_left_head 
+{
+	width:25%;
+	padding:5px;
+	float:left;
+	border: 0px solid red; 
+	text-align: right;
+	margin-right:10px;
+	font-weight: bold;
+	font-size: 14px;
+	margin-top: 10px;
+}
+.details_right
+{
+	width:70%;
+	padding:5px;
+	float:right;
+	border: 0px solid red;
+	font-weight: bold;
+	font-size: 14px;
+	color:green;
+	margin-top: 10px;
+}
+.detatail_clear{ clear: both; }
+.toggle_owner
+{
+	width:100%;
+	padding: 10px;
+	border: 1px solid #ddd;
+	border-radius:4px;
+}
+.togglebody{
+	width:100%; 
+	margin-top: 20px;
+}
+.headtable{
+	font-weight: bold;
+	font-size: 14px;
+}

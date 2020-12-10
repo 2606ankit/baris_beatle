@@ -45,6 +45,7 @@
 												<th class="text-nowrap">Created date</th>
 												<th class="text-nowrap">Action</th>
 												<th class="text-nowrap"></th>
+												<th class="text-nowrap"></th>
 											</tr>
 									</tr>
 								</thead>
@@ -90,6 +91,8 @@
 													</div>
 
 	 
+										</td>
+										<td>
 										</td>
 										<td>
 										</td>
