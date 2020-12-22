@@ -63,11 +63,11 @@ $(document).ready(function(){
 	      },
 	      owner_email : {
 	        required: true,
-	   		remote : {
+	   		/*remote : {
 	   				url:  base_url+'chackuseremail',
 			        type: "post",
 			      	data: {owner_email: function() {return $('#owner_email').val();}}
-	   		}
+	   		}*/
 	      },
 	      owner_phone : {
 	        required: true,
@@ -665,7 +665,7 @@ var i = 0;
    			url  : base_url+'getallprocessAccToCnontractor',
    			data : {conID:conID},
    			success :  function(res){
-   				 
+   				 	 
    				var obj = JSON.parse(res);
    				var  mainhtml = '';
    				$.each(obj,function(key,value){
@@ -673,7 +673,7 @@ var i = 0;
    					// var newobj = JSON.parse(value);
 					 mainhtml += '<div class="col-md-4"><input type="checkbox" name="processes[]" id="processes'+key+'" value="'+processes_val[0]+'">'+processes_val[1]+'</div>';
 					$.each(value,function(k,v){
-						 mainhtml += 'Sub Processes Name : <div class="col-md-4"><input type="checkbox" name="subprocesses[]" id="processes'+k+'" value="'+v.id+'">'+v.sub_processes_name+'</div>';
+					 mainhtml += 'Sub Processes Name : <div class="col-md-4"><input type="checkbox" name="subprocesses[]" id="processes'+k+'" value="'+v.id+'">'+v.sub_processes_name+'</div>';
 					})
 					 
    				})

@@ -39,9 +39,9 @@
 												foreach ($getcontractor as $k=>$v){
 													 $userid = $v->owner_id;
 													$owner = json_decode($this->AdminModel->getuserById($userid));
-													print_r($owner);
+													 
 											?>	
-												<option value="<?php echo $v->bconid.'|'.$v->orgId; ?>"><?php echo $v->first_name.' '.$v->last_name.' (Contractor Name), '. $v->organization_name .' (Orgnization Name) , '.$owner[0]->first_name.' '.$owner[0]->last_name.' (Owner Name)' ?></option>
+												<option value="<?php echo $v->id.'|'.$v->orgId.'|'.$v->owner_id; ?>"><?php echo $v->first_name.' '.$v->last_name.' (Contractor Name), '. $v->organization_name .' (Orgnization Name) , '.$owner[0]->first_name.' '.$owner[0]->last_name.' (Owner Name)' ?></option>
 											<?php 
 												}
 											?>		

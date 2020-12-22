@@ -111,6 +111,8 @@ class Admin extends CI_Controller {
 			}
 			else{$lastid = $checkstation; }
 		//	echo '<pre>'; print_r($checkstation); die;
+			  
+
 			$insertarry	=	array
 							(
 								'user_unique_id'=>	$uniqueId,
@@ -120,8 +122,7 @@ class Admin extends CI_Controller {
 								'last_name'		=>	$this->input->post('owner_lastname'),
 								'user_email'	=>	$this->input->post('owner_email'),
 								'user_phone'	=>	$this->input->post('owner_phone'),
-								'user_devision'	=>	$this->input->post('owner_devision'),
-								'user_station'	=>	$lastid,
+								
 								'user_type'		=>	OWNER,
 								'created_by'	=>	$loginuserid,
 								'created_date'	=>	TODAY_DATE
@@ -130,12 +131,23 @@ class Admin extends CI_Controller {
 			if ($query){
 				$lastuserid = $this->db->insert_id();
 				$processes_id = implode('|', $this->input->post('processes'));
+
 				$insertprocesses = array(
 									'processes_id'	=>	$processes_id,
 									'user_id'		=>	$lastuserid,
 									'created_date'	=>	TODAY_DATE,
 									);
 				$queryprocesses = $this->db->insert('baris_user_processes',$insertprocesses);
+
+				// Insert data to baris_owner
+				$insertowner = array(
+									'owner_id'	=>	$lastuserid,
+									'devision_id'	=>	$this->input->post('owner_devision'),
+									'station_id'	=>	$lastid,
+									'created_date'	=>	TODAY_DATE
+								);
+				$ownerquery = $this->db->insert("baris_owner",$insertowner);
+				
 
 				$this->session->set_flashdata('success', 'New Owner Added Successfully');
 			}
@@ -257,6 +269,31 @@ class Admin extends CI_Controller {
 		$this->load->view('siteadmin/allowner',$data);		
 	}
 	//
+	// show owner detail
+	public function showowner()
+	{
+		$ownerid = base64_decode($this->uri->segment(3));
+
+		if($this->session->userdata('userid') == ''){redirect(ADMIN_URL.'index');} 
+		$userdata 		= 	$this->session->userdata();
+		$getallstation 	= 	$this->AdminModel->getallstation();
+		$loginuserid 	= 	$this->session->userdata('userid');
+	 	$getuserById	=	$this->AdminModel->getownerById($ownerid);
+	 	$getcontractor  = 	$this->AdminModel->getContractorByOwnerId($ownerid);
+	   //echo '<pre>'; print_r($getcontractor); die;
+		$data = array
+				(
+					'userdata' 			=> 	$userdata, 
+					'getstation'		=>	$this->getstation,
+					'getprocsses'		=>	$this->getprcesses,
+					'getorganization'	=>	$this->getorganization, 
+					'getuserById'		=>	json_decode($getuserById),
+					'getcontractor'		=>	$getcontractor
+				);
+				//echo '<pre>'; print_r(json_decode($getallcontractor)); die;
+		$this->load->view('siteadmin/showowner',$data);	
+	}
+	// end here
 	// get all contractor list start here
 	public function contractor()
 	{
@@ -403,8 +440,9 @@ class Admin extends CI_Controller {
 
 		$getlinemanager = $this->AdminModel->getLineManagerByConId($conid);
 		$getownerbyCon = $this->AdminModel->getOwnerAccToCon($conid);
+
 		//$getconowner = $this->AdminModel->getcontractorById($conid);
-			  //echo '<pre>'; print_r($getownerbyCon); die;
+			 //  echo '<pre>'; print_r($getlinemanager); die;
 		$data = array(
 					'userdata'			=>	$userdata,
 					'getowner'			=>	json_decode($getowner),
@@ -486,10 +524,10 @@ class Admin extends CI_Controller {
 		$usertype 		=	MANAGER_UNIQ;
  		$uniqueId	=	$this->AdminModel->uniqueId($usertype);
 		 
-		 // echo '<pre>'; print_r(json_decode($getcontractorWithOrg)); die;
+		//  echo '<pre>'; print_r(json_decode($getcontractorWithOrg)); die;
 
 		if (!empty($_POST) && !empty($_POST['line_firstname'])){
-			//echo '<pre>'; print_r($_POST); die;
+			// echo '<pre>'; print_r($_POST); die;
 			$intarray = array(
 							'user_unique_id'	=>	$uniqueId,
 							'username'			=>	$this->input->post('line_username'),
@@ -497,6 +535,7 @@ class Admin extends CI_Controller {
 							'last_name'			=>	$this->input->post('line_lastname'),
 							'user_email'		=>	$this->input->post('line_email'),
 							'user_phone'		=>	$this->input->post('line_phone'),
+							'user_password'		=>	$this->input->post('line_password'),
 							'user_type'			=>	LINE_MANAGER,
 							'created_by'		=>	$loginuserid,
 							'created_date'		=>	TODAY_DATE
@@ -506,12 +545,19 @@ class Admin extends CI_Controller {
 			if ($insertquery){
 				$odata = explode('|',$_POST['line_contracter']);
 				$conid = $odata[0];
-				$orgid = $odata[1]; 
+				$orgid = $odata[1];
+				$ownerid = $odata[2];
+
+				$processesId = implode(',',$_POST['processes']); 
+				$subprocessesId = implode(',',$_POST['subprocesses']); 
 				$inserlinedata = array(
 									'manager_id'		=>	$lastid,
 									'contractor_id'		=>	$conid,
 									'organization_id'	=>	$orgid,
+									'owner_id'			=>	$ownerid,
 									'created_by'		=>	$loginuserid,
+									'processes_id'		=>	$processesId,
+									'sub_processes_id'	=>	$subprocessesId,
 									'created_date'		=>	TODAY_DATE
 								);
 				$query = $this->db->insert("baris_linemanager",$inserlinedata);
@@ -549,6 +595,63 @@ class Admin extends CI_Controller {
 					'getalllinemager'	=>	json_decode($getalllinemager)
 				);
 		$this->load->view('siteadmin/alllinemanager',$data);
+	}
+	// end here
+	// show all detail for line manager
+	public function showlinemanager()
+	{
+		$linemanid = base64_decode($this->uri->segment(3));
+
+		if($this->session->userdata('userid') == ''){redirect(ADMIN_URL.'index');} 
+		$userdata 			= 	$this->session->userdata();
+		$getalldevision 	= 	$this->AdminModel->getalldevision();
+		$getalllinemager 	= 	$this->AdminModel->getlinemanagerWithId($linemanid);
+		$processes_id 		= 	explode(',',$getalllinemager[0]->processes_id);
+		$getallprocess 		=	$this->AdminModel->getSubproByPro($processes_id);
+		//echo '<pre>'; print_r($getalllinemager); die;
+		$data = array( 
+					'userdata' 			=> 	$userdata,
+					'getorganization'	=>	$this->getorganization,
+					'getprcesses'		=>	$this->getprcesses,
+					'getstation'		=>	$this->getstation, 
+					'getallprocess'		=>	$getallprocess,
+					'getalllinemager'	=>	$getalllinemager
+				);
+		$this->load->view('siteadmin/showlinemanager',$data);
+	}
+	// end here
+	// set Processes For line manager
+	public function setprocesses()
+	{
+		$linemanid 		= 	base64_decode($this->uri->segment(3));
+		$processesid 	= 	base64_decode($this->uri->segment(4));
+
+		if($this->session->userdata('userid') == ''){redirect(ADMIN_URL.'index');} 
+		$userdata 			= 	$this->session->userdata();
+		$getalldevision 	= 	$this->AdminModel->getalldevision();
+		$getalllinemager 	= 	$this->AdminModel->getlinemanagerWithId($linemanid);
+		$processes_id 		= 	explode(',',$getalllinemager[0]->processes_id);
+		$getallprocess 		=	$this->AdminModel->getSubproByPro($processesid);
+		//echo '<pre>'; print_r($getallprocess); die;
+		foreach ($getallprocess as $k=>$v){
+				$pdata = explode("|",$k);
+					$processesname = $pdata[1]; 
+					$processesfullname = $pdata[2]; 
+			}
+		$userproceeses = explode(",",$getalllinemager[0]->sub_processes_id);
+
+		$data = array( 
+					'userdata' 			=> 	$userdata,
+					'getorganization'	=>	$this->getorganization,
+					'getprcesses'		=>	$this->getprcesses,
+					'getstation'		=>	$this->getstation, 
+					'getallprocess'		=>	$getallprocess,
+					'getalllinemager'	=>	$getalllinemager,
+					'userproceeses'		=>	$userproceeses,
+					'processesname'		=>	$processesname,
+					'processesfullname'	=>	$processesfullname
+				);
+		$this->load->view('siteadmin/setprocesses',$data);
 	}
 	// end here
 	// Add Devision Start Here

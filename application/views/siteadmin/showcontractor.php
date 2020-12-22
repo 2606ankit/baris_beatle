@@ -26,18 +26,19 @@
 			<!-- begin panel --> 
 				 
 				 <div class="row">
-					<div class="col-xl-12 ui-sortable">
-					<!-- begin panel -->
-					<div class="panel panel-inverse" data-sortable-id="form-validation-1">
-						<!-- begin panel-heading -->
-						<div class="panel-heading ui-sortable-handle">
-							<h4 class="panel-title">Contractor Details </h4>
+				<!-- begin col-6 -->
+					<div class="col-xl-6 ui-sortable">
+						<!-- begin panel -->
+						<div class="panel panel-inverse" data-sortable-id="form-validation-1">
+							<!-- begin panel-heading -->
+							<div class="panel-heading ui-sortable-handle">
+								<h4 class="panel-title">Contractor Details</h4>
 							 
-						</div>
-						<!-- end panel-heading -->
-						<!-- begin panel-body -->
-						<div class="panel-body">
-							<div class="details_content">
+							</div>
+							<!-- end panel-heading -->
+							<!-- begin panel-body -->
+							<div class="panel-body">
+								 	<div class="details_content">
 								
 								<div class="details_left_head">Contractor Id : </div>
 								<div class="details_right"><?php echo $getcontractor[0]->user_unique_id; ?></div>
@@ -74,13 +75,26 @@
 
 								<div class="detatail_clear"></div>
 							</div>
-
-							<div class="toggle_owner" >
-								<div class="panel panel-inverse" data-sortable-id="form-validation-1">
-									<div class="panel-heading ui-sortable-handle">
-										<h4 class="panel-title">Owner Details </h4>
-									</div>
-
+							</div>
+							<!-- end panel-body -->
+							 
+						</div>
+						<!-- end panel -->
+					</div>
+					<!-- end col-6 -->
+					<!-- begin col-6 -->
+					<div class="col-xl-6 ui-sortable">
+						<!-- begin panel -->
+						<div class="panel panel-inverse" data-sortable-id="form-validation-2">
+							<!-- begin panel-heading -->
+							<div class="panel-heading ui-sortable-handle">
+								<h4 class="panel-title">Related Owner Details</h4>
+								 
+							</div>
+							<!-- end panel-heading -->
+							<!-- begin panel-body --> 
+								 <div class="toggle_owner" >
+								  
 									<div class="togglebody">
 										<div class="panel-body">
 											<table id="data-table-default1" class="table table-striped table-bordered table-td-valign-middle">
@@ -88,8 +102,7 @@
 											<tr style="background-color: #ddd;">
 												<td class="text-nowrap">No.</td>
 												<td class="text-nowrap">Owner Name</td>
-												<td class="text-nowrap">Owner Email</td>
-												<td class="text-nowrap">Owner Phone</td>
+											 
 												<td class="text-nowrap">Owner Processes</td>
 												<td class="text-nowrap">Working Processes</td>
 											</tr>
@@ -97,7 +110,7 @@
 												if (!empty($getownerbyCon)){
 													foreach ($getownerbyCon as $key=>$val)
 													{
-														$ownerproid = $proid = explode('|',$val->processes_id);
+														$ownerproid = explode('|',$val->processes_id);
 														 $processesval = $this->AdminModel->getprocessesMultiAccId($ownerproid);
 
 												$contractorproid =  explode(',',$val->bconproid);
@@ -106,9 +119,8 @@
 											?>	
 												<tr>
 													<td><?php echo $key+1;?></td>
-													<td style="height: 30px;"><?php echo $val->first_name.' '.$val->last_name; ?></td>
-													<td><?php echo $val->user_email; ?></td>
-													<td><?php echo $val->user_phone; ?></td>
+													<td style="height: 30px;"><a href="<?php echo ADMIN_URL?>showowner/<?php echo base64_encode($val->id)?>"><?php echo $val->first_name.' '.$val->last_name; ?></a></td>
+													 
 													<td>
 														<?php 
 																foreach ($processesval as $k=>$v){
@@ -161,19 +173,95 @@
 									</form>
 									</div>
 								</div>
-								</div>
+								 
 							</div>
-
+							 
+							<!-- end panel-body -->
+							<!-- begin hljs-wrapper -->
+						 
+							<!-- end hljs-wrapper -->
 						</div>
-						<!-- end panel-body -->
-						<!-- begin hljs-wrapper -->
-						
-						<!-- end hljs-wrapper -->
-				 
-					<!-- end panel -->
+						<!-- end panel -->
+
+						<!-- Line manager details start here-->
+						<div class="panel panel-inverse" data-sortable-id="form-validation-2">
+							<!-- begin panel-heading -->
+							<div class="panel-heading ui-sortable-handle">
+								<h4 class="panel-title">Related Contractor Details</h4>
+								 
+							</div>
+							<!-- end panel-heading -->
+							<!-- begin panel-body -->
+							 	 <div class="toggle_owner" >
+								 	 
+
+									<div class="togglebody">
+										<div class="panel-body">
+											<table id="data-table-default1" class="table table-striped table-bordered table-td-valign-middle">
+										
+											<tr style="background-color: #ddd;">
+												<td class="text-nowrap">No.</td>
+												<td class="text-nowrap">Manager Name</td> 
+												<td class="text-nowrap">Line Manager Processes</td>
+												<td class="text-nowrap">Sub Processes</td>
+											</tr>
+											<?php 
+												if (!empty($linemanagecount)){
+													foreach ($linemanagecount as $key=>$val)
+													{
+
+													$subrocessesid = explode(",",$val->linesub_processes_id);
+													$subprocessesdata = $this->AdminModel->getSubprocessesBySubprocessesid($subrocessesid);	 
+
+												$contractorproid =  explode(',',$val->lineprocesses_id);
+												//print_r($contractorproid );								
+												$conallpro = $this->AdminModel->getprocessesMultiAccId($contractorproid);
+
+											?>	
+												<tr>
+													<td><?php echo $key+1;?></td>
+													<td style="height: 30px;"><a href="<?php echo ADMIN_URL?>showlinemanager/<?php echo base64_encode($val->id); ?>"><?php echo $val->first_name.' '.$val->last_name; ?></td> 
+													<td>
+														<?php 
+																foreach ($processesval as $k=>$v){
+															?>
+																<span class="label label-success m-l-5 t-minus-1" style="color:#000;"><?php echo $v->processes_name; ?></span>
+															<?php 
+																}
+															?>
+													</td>
+													<td>
+														<?php 
+																foreach ($subprocessesdata as $k=>$v){
+															?>
+															 <div style="border: 1px solid #ddd; border-radius:4px; padding: 4px;color:#000;font-size:10px;"><?php echo $v->sub_processes_name; ?></div>
+																 
+															 
+															<?php 
+																}
+															?>
+													</td>
+												</tr>
+											<?php 
+													}
+												}
+											?>
+										</table>
+									
+									 
+									</div>
+								 
+							</div>
+							</div>
+							<!-- end panel-body -->
+							<!-- begin hljs-wrapper -->
+						 
+							<!-- end hljs-wrapper -->
+						</div>
+						<!--  End Line Manager Details Start here -->
+					</div>
+					<!-- end col-6 -->
 				</div>
-				</div>
-			</div>
 			 
 			<!-- end panel -->
 		</div>

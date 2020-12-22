@@ -44,8 +44,7 @@
 												<th class="text-nowrap">Status</th>
 												<th class="text-nowrap">Created date</th>
 												<th class="text-nowrap">Action</th>
-												<th class="text-nowrap"></th>
-												<th class="text-nowrap"></th>
+												<th class="text-nowrap"></th> 
 											</tr>
 									</tr>
 								</thead>
@@ -81,21 +80,20 @@
 														<span class="caret"></span>
 														</a>
 														<div class="dropdown-menu dropdown-menu-right">
+														 <a href="<?php echo ADMIN_URL;?>showowner/<?php echo base64_encode($val->id); ?>" class="dropdown-item" data-status="1" data-tablename="user" data-mainid="">Show Details</a>
 															<a href="<?php echo ADMIN_URL;?>editowner/<?php echo base64_encode($val->id); ?>" class="dropdown-item">Edit</a>
 													<a href="javascript:;"  class="dropdown-item changestatus" data-status="2" data-tablename="user" data-mainid="<?php echo $val->id;?>">Delete</a>
 													 
 													<a href="javascript:;" class="dropdown-item changestatus" data-status="0" data-tablename="user" data-mainid="<?php echo $val->id;?>">Inactive</a>
 													<a href="javascript:;" class="dropdown-item changestatus" data-status="1" data-tablename="user" data-mainid="<?php echo $val->id;?>">Active</a>
-													 <a href="javascript:;" class="dropdown-item" data-status="1" data-tablename="user" data-mainid="<?php echo $val->id;?>">Set Processes</a>
+													
 														</div>
 													</div>
 
 	 
 										</td>
 										<td>
-										</td>
-										<td>
-										</td>
+										</td> 
 									</tr>
 							 	<?php 
 										}

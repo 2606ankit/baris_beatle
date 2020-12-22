@@ -60,6 +60,9 @@
 			return json_encode($res);		
 		}
 		// end here
+		// get all owner details start here
+
+		// end here
 		// Check Devision If Already In database
 		public function checkdevision($checkvalue)
 		{	
@@ -190,6 +193,18 @@
 			return json_encode($result);		
 		}
 		// end here
+		// get line manager By Id
+		public function getlinemanagerWithId($linemanid)
+		{
+			$data = $this->db->select("buser.id as id,buser.first_name as first_name,buser.last_name as last_name,buser.status as status,buser.user_email as user_email,buser.user_phone as user_phone, bline.manager_id as manager_id,bline.contractor_id as contractor_id,bline.organization_id as organization_id,bline.processes_id as processes_id,bline.sub_processes_id as sub_processes_id")
+					->from("baris_user as buser")
+					->join("baris_linemanager as bline","bline.manager_id = buser.id")
+					->where("buser.id",$linemanid)
+					->get();
+			$res = $data->result();		
+			return $res;
+		}
+		// end here
 		// Get all owner with devision table and station name start here
 		public function getallowner()
 		{
@@ -204,10 +219,12 @@
 			return json_encode($result);		
 		}
 		// end here
+ 
+		// end here
 		// get owner acc to the id
 		public function getownerById($ownerid)
 		{
-			$data = $this->db->select("buser.id as id,buser.first_name as first_name,buser.last_name as last_name,buser.username as username,buser.user_email as user_email,buser.user_phone as user_phone,buser.created_date as created_date,buser.user_password as user_password, buser.status as status, bdiv.id as divid, bdiv.devision_name as devision_name, bsta.id as staid , bsta.station_name as station_name,buserpro.id as proid,buserpro.processes_id as processes_id,buserpro.user_id as uid")
+			$data = $this->db->select("buser.id as id,buser.user_unique_id as user_unique_id,buser.first_name as first_name,buser.last_name as last_name,buser.username as username,buser.user_email as user_email,buser.user_phone as user_phone,buser.created_date as created_date,buser.user_password as user_password, buser.status as status, bdiv.id as divid, bdiv.devision_name as devision_name, bsta.id as staid , bsta.station_name as station_name,buserpro.id as proid,buserpro.processes_id as processes_id,buserpro.user_id as uid")
 					->from("baris_user as buser")
 					->join("baris_devision as bdiv","bdiv.id = buser.user_devision","left")
 					->join("baris_station as bsta","bsta.id = buser.user_station","right")
@@ -217,9 +234,24 @@
 					->get();
 
 			$result = $data->result();
-			return $result;
+			return json_encode($result);
 		}
 		// end here
+		// get Contractor By Owner ID Start here
+		public function getContractorByOwnerId($ownerid)
+		{
+			$data = $this->db->select("bcon.contractor_id as contractor_id,bcon.owner_id as owner_id,bcon.organization_id as organization_id,bcon.devision_id as devision_id,bcon.station_id as station_id,bcon.processes_id as processes_id ,buser.id as id,buser.first_name as first_name , buser.last_name as last_name, buser.user_email as user_email ,  buser.user_phone as user_phone")
+					->from("baris_contractor as bcon")
+					->join("baris_user as buser","buser.id = bcon.contractor_id")
+					->where("bcon.owner_id",$ownerid)
+					->get();
+					//echo $this->db->last_query(); die;
+			$res = $data->result();
+			return $res;		
+		}
+		// end here
+		
+
 		// get all contractor start here
 		public function getallcontractor()
 		{
@@ -252,12 +284,12 @@
 			$result = $data->result();
 			return json_encode($result);
 		}
-		// end here
+		// end heregetallprocessAccToCnontractor
 
 		// Get All Contractor With Their orgnization information start here
 		public function getcontractorWithOrg()
 		{
-			$data = $this->db->select(" buser.id as id,buser.status as status,buser.first_name as first_name,buser.last_name as last_name,bcon.id as bconid,bcon.contractor_id as contractor_id,bcon.processes_id as processes_id,bcon.owner_id as owner_id,bcon.organization_id as orgId,borg.id as oID,borg.organization_name as organization_name,buser.user_type as user_type")
+			$data = $this->db->select("buser.id as id,buser.status as status,buser.first_name as first_name,buser.last_name as last_name,bcon.id as bconid,bcon.contractor_id as contractor_id,bcon.processes_id as processes_id,bcon.owner_id as owner_id,bcon.organization_id as orgId,borg.id as oID,borg.organization_name as organization_name,buser.user_type as user_type")
 					->from("baris_user as buser")
 					->join("baris_contractor as bcon","bcon.contractor_id = buser.id")
 					->join("baris_organization as borg","borg.id = bcon.organization_id ")
@@ -376,20 +408,52 @@
 					->from("baris_processes")
 					->where_in("id ",$proid)
 					->get();
-					//echo $this->db->last_query();
+					 //echo $this->db->last_query();
 			$result = $data->result();
 			return $result;		
 
 		}
-
+		public function getSubproByPro($proid)
+		{
+			//$pid = explode
+			$data = $this->db->select("bpro.id as id,bpro.processes_name as processes_name,bpro.processes_full_name as processes_full_name,bsubpro.sub_processes_name  as sub_processes_name ,bsubpro.processes_id as processes_id,bsubpro.id as subid")
+					->from("baris_processes as bpro")
+					->join("baris_subprocesses as bsubpro","bpro.id = bsubpro.processes_id")
+					->where_in("processes_id ",$proid)
+					//->group_by("processes_id")
+					->get();
+				 	// echo $this->db->last_query();
+			$result = $data->result();
+			foreach ($result as $k=>$v){
+				$finalarray[$v->processes_id.'|'.$v->processes_name.'|'.$v->processes_full_name][] = (object) array("sub_processes_name"=>$v->sub_processes_name,"id"=>$v->subid); 
+			}
+			return $finalarray;	
+		}
+		// end here
+		// get all subprocesses according to sub processesid
+		public function getSubprocessesBySubprocessesid($subproid)
+		{
+			$data = $this->db->select("*")
+					->from("baris_subprocesses")
+					->where_in("id",$subproid)
+					->get();
+			$res = $data->result();
+			return $res;		
+		}
 		// end here
 		// Get All line manager according to the Contractor Id
 		public function getLineManagerByConId($conid)
 		{
-			$data = $this->db->select("*")
+			/*$data = $this->db->select("*")
 					->from("baris_linemanager")
 					->where("contractor_id",$conid)
+					->get();*/
+			$data = $this->db->select("buser.id as id , buser.first_name as first_name , buser.last_name as last_name , buser.user_email as user_email , buser.user_phone as user_phone , bline.manager_id as manager_id , bline.contractor_id as contractor_id , bline.owner_id as lineowner_id , bline.organization_id as lineorganization_id , bline.processes_id as lineprocesses_id , bline.sub_processes_id as linesub_processes_id")
+					->from("baris_linemanager as bline")
+					->join("baris_user as buser","buser.id = bline.manager_id")
+					->where("bline.contractor_id",$conid)
 					->get();
+
 			$res = $data->result();
 			return 	$res;	
 		}
@@ -527,7 +591,7 @@
 			 
 			$data = $this->db->select("processes_id")
 					->from("baris_contractor")
-					->where("id",$id)
+					->where("contractor_id",$id)
 					->get();
 			$res = $data->result();		
 			 
@@ -557,7 +621,8 @@
 				}		   
 				
 
-			} 	
+			} 
+			//echo '<pre>'; print_r($finalarr); die;	
 			print_r(json_encode($finalarr));		
 		}
 		// end here

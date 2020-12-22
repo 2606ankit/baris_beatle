@@ -83,11 +83,12 @@
 													<span class="caret"></span>
 													</a>
 													<div class="dropdown-menu dropdown-menu-right">
-														<a href="<?php echo ADMIN_URL?>showcontractor/<?php echo base64_encode($val->id);?>" class="dropdown-item" data-status="1" data-tablename="user" data-mainid="<?php echo $val->id;?>">Show Details</a>
+														<a href="<?php echo ADMIN_URL?>showlinemanager/<?php echo base64_encode($val->id);?>" class="dropdown-item" data-status="1" data-tablename="user" data-mainid="<?php echo $val->id;?>">Set Processes</a>
+														 
 														<a href="<?php echo ADMIN_URL;?>editcontractor/<?php echo base64_encode($val->id); ?>" class="dropdown-item">Edit</a>
 														<a href="javascript:;"  class="dropdown-item changestatus" data-status="2" data-tablename="user" data-mainid="<?php echo $val->id;?>">Delete</a>
 														<a href="javascript:;" class="dropdown-item changestatus" data-status="0" data-tablename="user" data-mainid="<?php echo $val->id;?>">Inactive</a>
-												<a href="javascript:;" class="dropdown-item changestatus" data-status="1" data-tablename="user" data-mainid="<?php echo $val->id;?>">Active</a>
+														<a href="javascript:;" class="dropdown-item changestatus" data-status="1" data-tablename="user" data-mainid="<?php echo $val->id;?>">Active</a>
 														
 													</div>
 												</div>
