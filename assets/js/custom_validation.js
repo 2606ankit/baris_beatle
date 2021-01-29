@@ -314,23 +314,7 @@ $(document).ready(function(){
 	      cont_owner : {
 	        required: true,
 	      },
-	      cont_username : {
-	        required: true,
-	        remote : {
-	   				url:  base_url+'checkusername',
-			        type: "post",
-			      	data: {owner_username: function() {return $('#cont_username').val();}}
-	   		}
-	      },
 	      
-	      cont_email : {
-	        required: true,
-	   		remote : {
-	   				url:  base_url+'chackuseremail',
-			        type: "post",
-			      	data: {owner_email: function() {return $('#cont_email').val();}}
-	   		}
-	      },
 	      cont_phone : {
 	        required: true,
 	        number:true,
@@ -338,8 +322,7 @@ $(document).ready(function(){
 	        maxlength : 10,
 
 	      },
-	      cont_password : {
-	        required: true,
+	      cont_password : { 
 	        minlength : 8,
 	       },
 	      cont_rep_password : {
@@ -366,21 +349,14 @@ $(document).ready(function(){
 		    number: "Mobile Number should Numeric",
 		    min: "Mobile Number should be min 10 digit",
 		  },
-		  cont_username: {
-		    required: "Username should not be empty",
-			remote: jQuery.validator.format("{0} is already taken. Please choose another username. ")
-		  },
-		  cont_email: {
-		    required: "Email should not be empty",
-			remote: jQuery.validator.format("{0} is already taken. Please choose another Email. ")
-		  },
+		   
 		  cont_password: {
-		    required: "Password Should not be blank",
+		   
 			minlength: "Password Should have minimum 8 digit",
 		  },
 		 
 		  cont_rep_password: {
-		    required: "Password Should not be blank",
+		    
 			equalto: "Password does not match",
 		  },
 		}
@@ -413,11 +389,7 @@ $(document).ready(function(){
 	      line_email : {
 	        required: true,
 	        email : true,
-	   		remote : {
-	   				url:  base_url+'chackuseremail',
-			        type: "post",
-			      	data: {owner_email: function() {return $('#line_email').val();}}
-	   		}
+	   		 
 	      },
 	      line_phone : {
 	        required: true,
@@ -457,8 +429,77 @@ $(document).ready(function(){
 		  },
 		  line_email: {
 		    required: "Email should not be empty",
-			remote: jQuery.validator.format("{0} is already taken. Please choose another Email. ")
+		   },
+		  line_password: {
+		    required: "Password Should not be blank",
+			minlength: "Password Should have minimum 8 digit",
 		  },
+		 
+		  line_rep_password: {
+		    required: "Password Should not be blank",
+			equalto: "Password does not match",
+		  },
+		}
+		
+	  });
+   $("#add_linemanager").validate({
+	    rules: {
+	      line_contracter : {
+	        required: true,
+	      },
+	      line_firstname : {
+	        required: true,
+	      },
+	      line_lastname : {
+	        required: true,
+	      },
+	      line_username : {
+	        required: true,
+	       
+	      },
+	      
+	      line_email : {
+	        required: true,
+	        email : true,
+	   		 
+	      },
+	      line_phone : {
+	        required: true,
+	        number:true,
+	        minlength : 10,
+	        maxlength : 10,
+
+	      },
+	      line_password : {
+	          minlength : 8,
+	       },
+	      cont_rep_password : {
+	        
+	       equalTo: "#cont_password",
+	       },
+	    },
+	    messages : {
+		  line_contracter: {
+		    required: "Organization name should not be empty",
+		  },
+		  line_firstname: {
+		    required: "First Name should not be empty",
+		  },
+		  line_lastname: {
+		    required: "Last name should not be empty",
+		  },
+		  
+		  line_phone: {
+		    required: "Mobile Number should not be empty",
+		    number: "Mobile Number should Numeric",
+		    min: "Mobile Number should be min 10 digit",
+		  },
+		  line_username: {
+		    required: "Username should not be empty",
+		  },
+		  line_email: {
+		    required: "Email should not be empty",
+		   },
 		  line_password: {
 		    required: "Password Should not be blank",
 			minlength: "Password Should have minimum 8 digit",
@@ -523,9 +564,46 @@ $(document).ready(function(){
 	  });
    // End here
 
+   // edit multiowner start here
+   
+   $("#editmoreowner").validate({
+	    rules: {
+	      editmorediv : {
+	        required: true,
+	   		 
+	      },
+	       editmorestation : {
+	        required: true,
+	   		 
+	      },
+	      'processes_add[]': {
+                required: true,
+                maxlength: 2
+            }
+	    },
+	    messages : {
+		  editmorediv: {
+		    required: "Please select atleast one division",
+		 
+		  },
+		  editmorestation: {
+		    required: "Please select atleast one station",
+		 
+		  },
+		  'processes_add[]': {
+                required: "Please select atleast on procsses",
+                maxlength: "Check no more than {0} boxes"
+            }
+		 
+		}
+		
+	  });
+   // end here
+
 
    // Change status Start here
    $(".changestatus").click(function(){
+    
    		var changestatus = 	$(this);
    		var tablename 	= 	changestatus.attr("data-tablename");
    		var statuvalue 	= 	changestatus.attr("data-status");
@@ -547,6 +625,98 @@ $(document).ready(function(){
 		   
 		} 
 
+   })
+
+   // change status for linked table 
+ 	$(".changestatuslinktable").click(function(){
+   		var changestatus = 	$(this);
+   		var tablename 	= 	changestatus.attr("data-tablename");
+   		var statuvalue 	= 	changestatus.attr("data-status");
+   		var statusid 	= 	changestatus.attr("data-mainid");
+   		var checkid 	= 	changestatus.attr("data-checkid");
+   		/*var staid 		= 	changestatus.attr("data-station");
+   		var divid 		= 	changestatus.attr("data-division");*/
+   		 
+   		var txt;
+		var r = confirm("Are You Sure To Want To Change Status !");
+		if (r == true) {
+			 $.ajax({
+	   			type : "POST",
+	   			url  : base_url+"changestatuslinktable",
+	   			data : {tablename:tablename,statuvalue:statuvalue,statusid:statusid,checkid:checkid},
+	   			success :  function (res){
+	   				//alert(res);
+	   				location.reload(); 
+	   			}
+	   		})
+		} else {
+		   
+		} 
+
+   })
+   // end here
+   // delete contractor from owner side
+   $(".deletecontractorfromowner").click(function(){
+   		var deletecontractorfromowner = $(this);
+   		var ownerid = deletecontractorfromowner.attr("data-ownerid");
+   		var conid 	= deletecontractorfromowner.attr("data-conid");
+	   	
+   		var txt;
+		var r = confirm("Are You Sure To Want To Change Status !");
+		if (r == true) {
+			 $.ajax({
+	   			type : "POST",
+	   			url  : base_url+"deletecontractorfromowner",
+	   			data : {ownerid:ownerid,conid:conid},
+	   			success :  function (res){
+	   				//alert(res);
+	   				location.reload(); 
+	   			}
+	   		})
+		} else {
+		   
+		} 
+   })
+   // end here
+
+   // Delete owner form contractor list by contractor
+   $(".deleteownerbycontractor").click(function(){
+
+   		var deletecontractorfromowner = $(this);
+   		var ownerid = deletecontractorfromowner.attr("data-ownerid");
+   		var conid 	= deletecontractorfromowner.attr("data-conid");
+   		var conproid =  deletecontractorfromowner.attr("data-conproid");
+	   	
+   		var txt;
+		var r = confirm("Are You Sure To Want To Delete Owner From Your Side !");
+		if (r == true) {
+			 $.ajax({
+	   			type : "POST",
+	   			url  : base_url+"deleteownerbycontractor",
+	   			data : {ownerid:ownerid,conid:conid,conproid:conproid},
+	   			success :  function (res){
+	   				alert(res);
+	   				//location.reload(); 
+	   			}
+	   		})
+		} else {
+		   
+		}
+
+   })
+   // end here
+
+   // Edit Multiowner information start here 
+   $(".editmultiowner").click(function(){
+   		var  editmultiowner = $(this);
+   		var editid 		= editmultiowner.attr("data-mainid");
+   		var divid  		= editmultiowner.attr("data-division");
+   		var staid  		= editmultiowner.attr("data-station");
+   		var editproid  	= editmultiowner.attr("data-editproid");
+
+   		$("#editbutton").click();
+   		$("#editownerid").val(editid);
+   		$("#editproid").val(editproid);
    })
    // end here
 
@@ -637,7 +807,9 @@ var i = 0;
    	$("#cont_owner_add").change(function(){
    		var ownerId = $("#cont_owner_add").val();
    		$("#hideprodiv").show();
-   		 
+   		 var spliarr = ownerId.split('|');
+   		 var proid = spliarr[5];
+   		// alert(ownerId);
    		$.ajax({
    			type : 'post',
    			url  : base_url+'getallprocessAccToOwnerCon',
@@ -682,7 +854,59 @@ var i = 0;
    		})
    	})
 
+   	
+
    	$(".showownerselect").click(function(){
    		$("#addownerselect").show(200);
    	})
+
+   	// set processes Start here
+   	$(".activepro").click(function(){
+   		var activepro = $(this);
+   		var proid = activepro.attr("data-proid");
+   		var proname = activepro.attr("data-name");
+   		$("#activepro_"+proid).addClass("processes_active");
+   		$("#processesId").val(proid);
+   		$("#setprocessesId").val(proid);
+   		$("#pronamediv").show(500);
+   		$("#proname").html('Set Processes For '+proname);
+   	})
+   	// end here
 })
+
+/*	$(document).ready(function(){
+	 	var base_url = "http://localhost/beatle_baris/index.php/admin/";
+   		var conID = $("#line_contracter").val();
+   		var presubproid = $("#presubproid").val();
+   		$("#hideprodiv").show();
+   		 
+   		$.ajax({
+   			type : 'post',
+   			url  : base_url+'getallprocessAccToCnontractor',
+   			data : {conID:conID},
+   			success :  function(res){
+   				 	 
+   				var obj = JSON.parse(res);
+   				var  mainhtml = '';
+   				var hh = $("#presubproid").val().split(',');
+
+   				//var subproidarray = presubproid.split(',');
+   				 //alert(subproidarray);
+			$.each(obj,function(key,value){
+				var processes_val = key.split(',');
+				// var newobj = JSON.parse(value);
+			 mainhtml += '<div class="col-md-4"><input type="checkbox" checked="checked" name="processes[]" id="processes'+key+'" value="'+processes_val[0]+'">'+processes_val[1]+'</div>';
+				$.each(value,function(k,v){
+
+					if(jQuery.inArray(v.id, hh) !== -1) 
+						{ var check = 'checked="checked"';  } else { var check = '';  }
+				 mainhtml += 'Sub Processes Name : <div class="col-md-4">';
+				 mainhtml += '<input type="checkbox" '+check+' name="subprocesses[]" id="processes'+k+'" value="'+v.id+'">'+v.sub_processes_name+'</div>';
+				})
+				 
+			})
+   				$("#prodiv").html(mainhtml);
+   			}
+   		})
+    
+})*/

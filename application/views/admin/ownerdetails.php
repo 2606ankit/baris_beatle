@@ -1,14 +1,9 @@
 <?php 
-	$this->load->view('layout/admin/header');
-	$this->load->view('layout/admin/sidebar');
-	$this->load->model('AdminModel');
-	$ownerproid = explode('|',$getuserById[0]->processes_id);
-    $processesval = $this->AdminModel->getprocessesMultiAccId($ownerproid);
+	$this->load->view('layout/siteadmin/header');
+	$this->load->view('layout/siteadmin/sidebar');
+	 $this->load->model('UserModel');
 ?>
-
-
-
-	<div id="content" class="content">
+		<div id="content" class="content">
 			<!-- begin breadcrumb -->
 			<ol class="breadcrumb float-xl-right">
 				<li class="breadcrumb-item"><a href="javascript:;">Home</a></li>
@@ -28,7 +23,7 @@
 							<!-- begin panel-heading -->
 							<div class="panel-heading ui-sortable-handle">
 								<h4 class="panel-title">Owner Details</h4>
-							<a href="<?php echo ADMIN_URL?>editowner/<?php echo base64_encode($getuserById[0]->id); ?>" style="margin-left: 20px;" class="btn btn-green m-r-5 m-b-5 addmoretoowner">Edit Owner</a>
+							<a href="<?php echo ADMIN_URL?>owneredit/<?php echo base64_encode($getuserById[0]->id); ?>" style="margin-left: 20px;" class="label label-success m-l-5 t-minus-1 showownerselect">Edit Owner</a>
 							</div>
 							<!-- end panel-heading -->
 							<!-- begin panel-body -->
@@ -56,8 +51,15 @@
 
 									<div class="details_left_head">Running Processes : </div>
 									<div class="details_right">
-										<?php foreach ($processesval as $k=>$v){?>
+										<?php foreach ($getprocssesById as $k=>$v){?>
 											<span class="label label-success m-l-5 t-minus-1"><?php echo $v->processes_name ; ?></span>
+										<?php } ?>
+									</div>
+									<div class="details_left_head">Running Sub Processes : </div>
+									<div class="details_right">
+										<?php foreach ($getSubprocssesById as $k=>$v){?>
+											<div style="margin-top:10px;">
+											<span class="label label-success m-l-5 t-minus-1"><?php echo $v->sub_processes_name ; ?></span></div>
 										<?php } ?>
 									</div>
 									
@@ -75,13 +77,13 @@
 									<div class="detatail_clear"></div>
 								</div>
 									<div style="width: 100%;padding: 10px; border:1px solid #ddd; border-radius:4px;display: none;" id="showmoreowner">
-											<form accept="" action="<?php echo ADMIN_URL?>addownerTootherstation" method="post" name="addmoreowner" id="addmoreowner">
+											<form accept="" action="<?php echo ADMIN_URL?>addownerTootherstation" method="post" name="addmoreowner" id="addownerselect">
 												<input type="hidden" name="ownerid" id="ownerid" value="<?php echo $getuserById[0]->id ?>">
 													<div style="width: 100%;padding-bottom: 10px; text-align: center;font-weight: bold;">Add Owner To Other Devision And Station</div>
 												<select name="morediv" id="morediv" class="form-control">
-													<option>- - Select Devision - - </option>
+													<option value="">- - Select Devision - - </option>
 													<?php 
-														foreach ($getalldevision as $k=>$v){
+														foreach ($getAlldivision as $k=>$v){
 														if (!in_array($v->id, $selectedDevionbyowner)){
 													?>
 														<option value="<?php echo $v->id; ?>"><?php echo $v->devision_name; ?></option>
@@ -92,7 +94,7 @@
 												</select>
 												<br>
 												<select name="morestation" id="morestation" class="form-control">
-													<option>- - Select Station - - </option>
+													<option value="">- - Select Station - - </option>
 													<?php 
 														foreach($getstation as $key=>$val){
 														if (!in_array($val->id, $selectedStationbyowner)){
@@ -103,13 +105,15 @@
 														}
 													?>
 												</select><br>
-												<?php 
-													foreach ($getprocsses as $kk=>$vv){
-												?>
-													<input type="checkbox" name="processes_add[]" id="processes_add" value="<?php echo $vv->id; ?>">&nbsp;&nbsp;&nbsp;<?php echo $vv->processes_name; ?>
-												<?php
-													}
-												?>
+												<div style="width:100%; padding:5px;">
+													<?php 
+													foreach ($getallprocesses as $k=>$v){
+
+													?>
+													<div style="float: left;border: 0px solid #ddd;border-radius: 4px; margin-left: 10px; font-weight: bold;"><input type="checkbox" data-proid="<?php echo $v->id; ?>" name="processesid[]" id="processesid[]" class="checkprocsses" value="<?php echo $v->id; ?>"><?php echo $v->processes_name;?></div>
+													<div id="subprocessesaDiv_<?php echo $v->id; ?>"></div>
+												<?php }?>
+												</div>
 												<br><br>
 												<button type="submit" class="btn btn-primary">Add New Processes</button>
 											</form>
@@ -145,7 +149,7 @@
 												<select name="editmorediv" id="editmorediv" class="form-control">
 													<option value="">- - Select Devision - - </option>
 													<?php 
-														foreach ($getalldevision as $k=>$v){
+														foreach ($getAlldivision as $k=>$v){
 														if (!in_array($v->id, $selectedDevionbyowner)){
 													?>
 														<option value="<?php echo $v->id; ?>"><?php echo $v->devision_name; ?></option>
@@ -167,13 +171,15 @@
 														}
 													?>
 												</select><br>
-												<?php 
-													foreach ($getprocsses as $kk=>$vv){
-												?>
-													<input type="checkbox" name="processes_add[]" id="processes_add" value="<?php echo $vv->id; ?>">&nbsp;&nbsp;&nbsp;<?php echo $vv->processes_name; ?>
-												<?php
-													}
-												?>
+												<div style="width:100%; padding:5px;">
+													<?php 
+													foreach ($getallprocesses as $k=>$v){
+
+													?>
+													<div style="float: left;border: 0px solid #ddd;border-radius: 4px; margin-left: 10px; font-weight: bold;"><input type="checkbox" data-proid="<?php echo $v->id; ?>" name="processesidedit[]" id="processesidedit[]" class="checkprocsses_edit" value="<?php echo $v->id; ?>"><?php echo $v->processes_name;?></div>
+													<div id="editsubprocessesaDiv_<?php echo $v->id; ?>"></div>
+												<?php }?>
+												</div>
 												<br><br>
 												<button type="submit" class="btn btn-primary">Edit Processes</button>
 											</form>
@@ -210,20 +216,21 @@
 													<td class="text-nowrap">Action</td> 
 												</tr>
 												<?php 
-													if (!empty($getrelatedownerdata)){
-														foreach ($getrelatedownerdata as $key=>$val)
+													if (!empty($getuserById)){
+														foreach ($getuserById as $key=>$val)
 														{ 
 															if ($key != 0){
 																$i = 1;
-													$contractorproid =  explode(',',$val->processes_id);
-													//print_r($contractorproid );						
-													if ($val->ownstatus == ACTIVE_STATUS){
+													 						
+													if ($val->ownerstatus == ACTIVE_STATUS){
 											 			$status = '<span class="label label-success m-l-5 t-minus-1" style="background-color:yellow;color:#000;">Active</span>';
 											 		}else {
 											 			$status = '<span class="label label-success m-l-5 t-minus-1" style="background-color:red;color:#000;">Inactive</span>';
 											 		}		
-													$conallpro = $this->AdminModel->getprocessesMultiAccId($contractorproid);
-												//	echo '<pre>'; print_r($conallpro);
+
+													 $processesdata = $this->UserModel->getprocessesByMultiId($val->processes_id);
+
+													 //$processesdata = $this->UserModel->getSubprocessesByMultiId($ownerprocess);
 												?>	
 													<tr>
 														<td><?php echo $i;?></td>
@@ -233,7 +240,7 @@
 														 
 														<td>
 															<?php 
-																	foreach ($conallpro as $k=>$v){
+																	foreach ($processesdata as $k=>$v){
 																	$editproid[] = $v->id;
 																?>
 																	<span class="label label-success m-l-5 t-minus-1" style="color:#FFF;background-color: green;"><?php echo $v->processes_name; ?></span>
@@ -366,6 +373,5 @@
 			<!-- end panel -->
 		</div>
 <?php 
-	$this->load->view('layout/admin/footer');
-
+	$this->load->view('layout/siteadmin/footer');
 ?>

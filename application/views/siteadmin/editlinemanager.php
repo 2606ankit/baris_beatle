@@ -29,7 +29,7 @@
 						<!-- end panel-heading -->
 						<!-- begin panel-body -->
 						<div class="panel-body">
-							<form class="form-horizontal" name="add_linemanager" id="add_linemanager" action="<?php echo ADMIN_URL ?>addlinemanager" method="post">
+							<form class="form-horizontal" name="edit_linemanager" id="edit_linemanager" action="<?php echo ADMIN_URL ?>editlinemanager/<?php echo base64_encode($lineid); ?>" method="post">
 								<div class="form-group row m-b-15">
 									<label class="col-md-4 col-sm-4 col-form-label" for="fullname">Contractor Name * :</label>
 									<div class="col-md-8 col-sm-8">
@@ -41,7 +41,7 @@
 													$owner = json_decode($this->AdminModel->getuserById($userid));
 													 
 											?>	
-												<option value="<?php echo $v->id.'|'.$v->orgId.'|'.$v->owner_id; ?>"><?php echo $v->first_name.' '.$v->last_name.' (Contractor Name), '. $v->organization_name .' (Orgnization Name) , '.$owner[0]->first_name.' '.$owner[0]->last_name.' (Owner Name)' ?></option>
+												<option <?php if($getLinemanagerById[0]->contractor_id == $v->id ){echo "selected='selected'";}?>value="<?php echo $v->id.'|'.$v->orgId.'|'.$v->owner_id; ?>"><?php echo $v->first_name.' '.$v->last_name.' (Contractor Name), '. $v->organization_name .' (Orgnization Name) , '.$owner[0]->first_name.' '.$owner[0]->last_name.' (Owner Name)' ?></option>
 											<?php 
 												}
 											?>		
@@ -49,6 +49,9 @@
 										 
 									</div>
 								</div>
+								<input type="hidden" name="preproid" id="preproid" value="<?php echo $getLinemanagerById[0]->processes_id;?> ">
+								<input type="hidden" name="presubproid" id="presubproid" value="<?php echo $getLinemanagerById[0]->sub_processes_id;?> ">
+
 								<div class="form-group row m-b-15" id="hideprodiv" style="display:none;">
 									<label class="col-md-4 col-sm-4 col-form-label" for="full1name">Processes * :</label>
 									<div class="col-md-8 col-sm-8" id="prodiv">
@@ -58,19 +61,19 @@
 								<div class="form-group row m-b-15">
 									<label class="col-md-4 col-sm-4 col-form-label" for="fullname">First Name * :</label>
 									<div class="col-md-8 col-sm-8">
-										<input class="form-control" type="text" id="line_firstname" name="line_firstname" placeholder="Line Manager First name" >
+										<input class="form-control" type="text" id="line_firstname" name="line_firstname" placeholder="Line Manager First name" value="<?php echo $getLinemanagerById[0]->first_name; ?>">
 									</div>
 								</div>
 								<div class="form-group row m-b-15">
 									<label class="col-md-4 col-sm-4 col-form-label" for="fullname">Last Name * :</label>
 									<div class="col-md-8 col-sm-8">
-										<input class="form-control" type="text" id="line_lastname" name="line_lastname" placeholder="Line Manager Last name" >
+										<input class="form-control" type="text" id="line_lastname" name="line_lastname" placeholder="Line Manager Last name" value="<?php echo $getLinemanagerById[0]->last_name; ?>" >
 									</div>
 								</div>
 								<div class="form-group row m-b-15">
 									<label class="col-md-4 col-sm-4 col-form-label" for="full1name">User name * :</label>
 									<div class="col-md-8 col-sm-8">
-										<input class="form-control" type="text" id="line_username" name="line_username" placeholder="Line Manager Username" >
+										<input class="form-control" type="text" id="line_username" name="line_username" placeholder="Line Manager Username" value="<?php echo $getLinemanagerById[0]->username; ?>" readonly="readonly">
 									</div>
 								</div>
  
@@ -78,14 +81,14 @@
 								<div class="form-group row m-b-15">
 									<label class="col-md-4 col-sm-4 col-form-label" for="full1name">Line Manager Email * :</label>
 									<div class="col-md-8 col-sm-8">
-										<input class="form-control" type="text" id="line_email" name="line_email" placeholder="Line Manager Email" >
+										<input class="form-control" type="text" id="line_email" name="line_email" placeholder="Line Manager Email" value="<?php echo $getLinemanagerById[0]->user_email; ?>" readonly="readonly" >
 									</div>
 								</div>
 								 
 								<div class="form-group row m-b-15">
 									<label class="col-md-4 col-sm-4 col-form-label" for="full1name">Mobile Number * :</label>
 									<div class="col-md-8 col-sm-8">
-										<input class="form-control" type="number" id="line_phone" name="line_phone" placeholder="Line Manager Mobile" >
+										<input class="form-control" type="number" id="line_phone" name="line_phone" placeholder="Line Manager Mobile" value="<?php echo $getLinemanagerById[0]->user_phone; ?>">
 									</div>
 								</div>
 								<div class="form-group row m-b-15">
@@ -93,23 +96,23 @@
 									<div class="col-md-8 col-sm-8">
 										<select name="line_shift" id="line_shift" class="form-control">
 											<option>- - Select Shift - - </option>
-											<option value="1">1</option>
-											<option value="2">2</option>
-											<option value="3">3</option>
-											<option value="4">4</option>
+											<option <?php if($getLinemanagerById[0]->shifts == '1'){echo "selected='selected'"; }?>value="1">1</option>
+											<option <?php if($getLinemanagerById[0]->shifts == '2'){echo "selected='selected'"; }?> value="2">2</option>
+											<option <?php if($getLinemanagerById[0]->shifts == '3'){echo "selected='selected'"; }?> value="3">3</option>
+											<option <?php if($getLinemanagerById[0]->shifts == '4'){echo "selected='selected'"; }?> value="4">4</option>
 										</select>
 									</div>
 								</div>
-
+								<input type="hidden" name="old_password" id="old_password" value="<?php echo $getLinemanagerById[0]->user_password ?>">
 								<div class="form-group row m-b-15">
-									<label class="col-md-4 col-sm-4 col-form-label" for="full1name">User Password * :</label>
+									<label class="col-md-4 col-sm-4 col-form-label" for="full1name">User Password  :</label>
 									<div class="col-md-8 col-sm-8">
 										<input class="form-control" type="password" id="line_password" name="line_password" placeholder="Line Manager Password" >
 									</div>
 								</div>
 
 								<div class="form-group row m-b-15">
-									<label class="col-md-4 col-sm-4 col-form-label" for="full1name">Repet Password * :</label>
+									<label class="col-md-4 col-sm-4 col-form-label" for="full1name">Repet Password  :</label>
 									<div class="col-md-8 col-sm-8">
 										<input class="form-control" type="password" id="line_rep_password" name="line_rep_password" placeholder="Line Manager Repete Password" >
 									</div>

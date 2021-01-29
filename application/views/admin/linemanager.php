@@ -1,7 +1,7 @@
  <?php 
-	$this->load->view('layout/admin/header');
-	$this->load->view('layout/admin/sidebar');
-	$this->load->model('AdminModel');
+	$this->load->view('layout/siteadmin/header');
+	$this->load->view('layout/siteadmin/sidebar');
+ 
 ?>
 	
 		<!-- begin #content -->
@@ -50,8 +50,8 @@
 								<tbody>
 									 
 									<?php 
-								 if (!empty($getalllinemager)){
-								 	foreach ($getalllinemager as $key=>$val){
+								 if (!empty($getalllinemanagerlist)){
+								 	foreach ($getalllinemanagerlist as $key=>$val){
 								 		$date = date('d, M Y',strtotime($val->created_date));
 								 		 
 								 		if ($val->status == ACTIVE_STATUS){
@@ -78,20 +78,18 @@
 
 									<td>
 										<div class="btn-group">
-													<a href="#" class="btn btn-white btn-sm width-90">Action</a>
-													<a href="#" class="btn btn-white btn-sm dropdown-toggle width-30 no-caret" data-toggle="dropdown">
-													<span class="caret"></span>
-													</a>
-													<div class="dropdown-menu dropdown-menu-right">
-														<a href="<?php echo ADMIN_URL?>showlinemanager/<?php echo base64_encode($val->id);?>" class="dropdown-item" data-status="1" data-tablename="user" data-mainid="<?php echo $val->id;?>">Set Processes</a>
-														 
-														<a href="<?php echo ADMIN_URL;?>editlinemanager/<?php echo base64_encode($val->id); ?>" class="dropdown-item">Edit</a>
-														<a href="javascript:;"  class="dropdown-item changestatus" data-status="2" data-tablename="user" data-mainid="<?php echo $val->id;?>">Delete</a>
-														<a href="javascript:;" class="dropdown-item changestatus" data-status="0" data-tablename="user" data-mainid="<?php echo $val->id;?>">Inactive</a>
-														<a href="javascript:;" class="dropdown-item changestatus" data-status="1" data-tablename="user" data-mainid="<?php echo $val->id;?>">Active</a>
-														
-													</div>
-												</div>
+											<a href="#" class="btn btn-white btn-sm width-90">Action</a>
+											<a href="#" class="btn btn-white btn-sm dropdown-toggle width-30 no-caret" data-toggle="dropdown">
+											<span class="caret"></span>
+											</a>
+											<div class="dropdown-menu dropdown-menu-right">
+												<a href="<?php echo ADMIN_URL?>linemangerdetails/<?php echo base64_encode($val->id);?>" class="dropdown-item" data-status="1" data-tablename="user" data-mainid="<?php echo $val->id;?>">Set Processes</a>
+												<a href="<?php echo ADMIN_URL;?>editlinemanager/<?php echo base64_encode($val->id); ?>" class="dropdown-item">Edit</a>
+												<a href="javascript:;"  class="dropdown-item changestatus" data-status="2" data-tablename="user" data-mainid="<?php echo $val->id;?>">Delete</a>
+												<a href="javascript:;" class="dropdown-item changestatus" data-status="0" data-tablename="user" data-mainid="<?php echo $val->id;?>">Inactive</a>
+												<a href="javascript:;" class="dropdown-item changestatus" data-status="1" data-tablename="user" data-mainid="<?php echo $val->id;?>">Active</a>
+											</div>
+										</div>
 											 
 											 
 									</td>
@@ -120,5 +118,5 @@
 		 
 		</div>
  <?php 
-	$this->load->view('layout/admin/footer');
+	$this->load->view('layout/siteadmin/footer');
 ?>

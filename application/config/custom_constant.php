@@ -5,7 +5,8 @@
 
 	define('BASE_URL'	,	SERVER_URL);
 	define('ASSETS_URL'	, 	SERVER_URL.'assets/');
-	define('ADMIN_URL'	, 	SERVER_URL.'index.php/admin/');
+	define('ADMIN_URL'	, 	SERVER_URL.'index.php/siteadmin/');
+	//define('ADMIN_URL'	, 	SERVER_URL.'index.php/admin/');
 
 	// table prefix 
 	define('TABLE_PREFIX','baris');

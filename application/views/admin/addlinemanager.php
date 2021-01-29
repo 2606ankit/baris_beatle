@@ -1,7 +1,7 @@
  <?php 
-	$this->load->view('layout/admin/header');
-	$this->load->view('layout/admin/sidebar');
-	$this->load->model('AdminModel');
+	$this->load->view('layout/siteadmin/header');
+	$this->load->view('layout/siteadmin/sidebar');
+	 $this->load->model('UserModel');
 ?>
 		<!-- begin #content -->
 		<div id="content" class="content">
@@ -36,17 +36,17 @@
 										<select name="line_contracter" id="line_contracter" class="form-control">
 											<option value=""> - - Select Contractor - - </option>
 											<?php 
-												foreach ($getcontractor as $k=>$v){
-													 $userid = $v->owner_id;
-													$owner = json_decode($this->AdminModel->getuserById($userid));
-													 
+												foreach ($getallcontractorlist as $k=>$v){
+													$userid = $v->contractor_id;
+													$owner = json_decode($this->UserModel->getownerByContractorId($userid));
+
 											?>	
-												<option value="<?php echo $v->id.'|'.$v->orgId.'|'.$v->owner_id; ?>"><?php echo $v->first_name.' '.$v->last_name.' (Contractor Name), '. $v->organization_name .' (Orgnization Name) , '.$owner[0]->first_name.' '.$owner[0]->last_name.' (Owner Name)' ?></option>
+												<option value="<?php echo $v->table_con_id.'|'.$v->id.'|'.$v->organization_id.'|'.$v->owner_id; ?>"><?php echo $v->first_name.' '.$v->last_name.' (Contractor Name), '. $v->organization_name .' (Orgnization Name) , '.$owner[0]->first_name.' '.$owner[0]->last_name.' (Owner Name)' ?></option>
 											<?php 
 												}
 											?>		
 										</select>
-										 
+										 <div id="ownerprocesses"></div>
 									</div>
 								</div>
 								<div class="form-group row m-b-15" id="hideprodiv" style="display:none;">
@@ -92,7 +92,7 @@
 									<label class="col-md-4 col-sm-4 col-form-label" for="full1name">Shifts * :</label>
 									<div class="col-md-8 col-sm-8">
 										<select name="line_shift" id="line_shift" class="form-control">
-											<option>- - Select Shift - - </option>
+											<option value="">- - Select Shift - - </option>
 											<option value="1">1</option>
 											<option value="2">2</option>
 											<option value="3">3</option>
@@ -137,5 +137,5 @@
 		</div>
 		<!-- end #content -->
 <?php 
-	$this->load->view('layout/admin/footer');
+	$this->load->view('layout/siteadmin/footer');
 ?>

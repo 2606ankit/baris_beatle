@@ -1,7 +1,7 @@
  <?php 
-	$this->load->view('layout/admin/header');
-	$this->load->view('layout/admin/sidebar');
-	$this->load->model('AdminModel');
+	$this->load->view('layout/siteadmin/header');
+	$this->load->view('layout/siteadmin/sidebar');
+ 
 ?>
 	
 		<!-- begin #content -->
@@ -50,8 +50,8 @@
 								<tbody>
 									 
 									<?php 
-								 if (!empty($getalllinemager)){
-								 	foreach ($getalllinemager as $key=>$val){
+								 if (!empty($getallcontractorlist)){
+								 	foreach ($getallcontractorlist as $key=>$val){
 								 		$date = date('d, M Y',strtotime($val->created_date));
 								 		 
 								 		if ($val->status == ACTIVE_STATUS){
@@ -83,12 +83,11 @@
 													<span class="caret"></span>
 													</a>
 													<div class="dropdown-menu dropdown-menu-right">
-														<a href="<?php echo ADMIN_URL?>showlinemanager/<?php echo base64_encode($val->id);?>" class="dropdown-item" data-status="1" data-tablename="user" data-mainid="<?php echo $val->id;?>">Set Processes</a>
-														 
-														<a href="<?php echo ADMIN_URL;?>editlinemanager/<?php echo base64_encode($val->id); ?>" class="dropdown-item">Edit</a>
+														<a href="<?php echo ADMIN_URL?>contractordetails/<?php echo base64_encode($val->id);?>" class="dropdown-item" data-status="1" data-tablename="user" data-mainid="<?php echo $val->id;?>">Show Details</a>
+														<a href="<?php echo ADMIN_URL;?>editcontractor/<?php echo base64_encode($val->id); ?>" class="dropdown-item">Edit</a>
 														<a href="javascript:;"  class="dropdown-item changestatus" data-status="2" data-tablename="user" data-mainid="<?php echo $val->id;?>">Delete</a>
 														<a href="javascript:;" class="dropdown-item changestatus" data-status="0" data-tablename="user" data-mainid="<?php echo $val->id;?>">Inactive</a>
-														<a href="javascript:;" class="dropdown-item changestatus" data-status="1" data-tablename="user" data-mainid="<?php echo $val->id;?>">Active</a>
+												<a href="javascript:;" class="dropdown-item changestatus" data-status="1" data-tablename="user" data-mainid="<?php echo $val->id;?>">Active</a>
 														
 													</div>
 												</div>
@@ -104,7 +103,7 @@
 
 						 	?>
 						 		<tr>
-						 			<td colspan="10" style="text-align: center;"><a href="<?php echo ADMIN_URL ?>addlinemanager">Click To Add New Line Manager</a></td>
+						 			<td colspan="10" style="text-align: center;"><a href="<?php echo ADMIN_URL ?>addcontractor">Click To Add New Contractor</a></td>
 						 		</tr>
 							<?php }?>
 									 
@@ -120,5 +119,5 @@
 		 
 		</div>
  <?php 
-	$this->load->view('layout/admin/footer');
+	$this->load->view('layout/siteadmin/footer');
 ?>

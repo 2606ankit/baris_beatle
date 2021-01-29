@@ -59,13 +59,13 @@
 	<script src="<?php echo ASSETS_URL; ?>js/demo/ui-modal-notification.demo.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"></script>
 		
-	<script src="<?php echo ASSETS_URL?>js/custom_validation.js"></script>
+	<script src="<?php echo ASSETS_URL?>js/admin_custom_validation.js"></script>
 	<script src="<?php echo ASSETS_URL?>js/setprocessesJs.js"></script>
-		<script src="<?php echo ASSETS_URL; ?>js/demo/email-inbox.demo.js"></script>
+	<script src="<?php echo ASSETS_URL; ?>js/demo/email-inbox.demo.js"></script>
 
 <script>
 	// get all station here
-  $( function() {
+ $( function() {
     var availableTags = [
     <?php
     //	print_r($getstation);
@@ -81,7 +81,7 @@
   } );
   // end here
   // get all organization autocomplete
-	  $( function() {
+	 $( function() {
 	    var availableTags1 = [
 	    <?php
 	    //	print_r($getstation);

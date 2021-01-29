@@ -29,12 +29,12 @@
 	<link href="<?php echo ASSETS_URL; ?>plugins/jquery-simplecolorpicker/jquery.simplecolorpicker-fontawesome.css" rel="stylesheet" />
 	<link href="<?php echo ASSETS_URL; ?>plugins/jquery-simplecolorpicker/jquery.simplecolorpicker-glyphicons.css" rel="stylesheet" />
 
-		<link href="<?php echo ASSETS_URL; ?>css/custom_style.css" rel="stylesheet" />
-<link href="<?php echo ASSETS_URL; ?>plugins/gritter/css/jquery.gritter.css" rel="stylesheet" />
+	<link href="<?php echo ASSETS_URL; ?>css/custom_style.css" rel="stylesheet" />
+	<link href="<?php echo ASSETS_URL; ?>plugins/gritter/css/jquery.gritter.css" rel="stylesheet" />
 	<!-- Datatable start here -->
-		<link href="<?php echo ASSETS_URL; ?>plugins/datatables.net-bs4/css/dataTables.bootstrap4.min.css" rel="stylesheet" />
-		<link href="<?php echo ASSETS_URL; ?>plugins/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css" rel="stylesheet" />
-		<link href="<?php echo ASSETS_URL; ?>plugins/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css" rel="stylesheet" />
+	<link href="<?php echo ASSETS_URL; ?>plugins/datatables.net-bs4/css/dataTables.bootstrap4.min.css" rel="stylesheet" />
+	<link href="<?php echo ASSETS_URL; ?>plugins/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css" rel="stylesheet" />
+	<link href="<?php echo ASSETS_URL; ?>plugins/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css" rel="stylesheet" />
 		
 
 	<!-- ================== END PAGE LEVEL STYLE ================== -->
@@ -56,16 +56,29 @@
 	<div id="page-loader" class="fade show"><span class="spinner"></span></div>
 	<!-- end #page-loader -->
 	<div id="gritter-notice-wrapper">
-	 <?php if($this->session->flashdata('success') || $this->session->flashdata('error')) { ?>
-		 
-
-			 <div id="gritter-item-4" class="gritter-item-wrapper" style="" role="alert">
+	 <?php if($this->session->flashdata('success')) { ?>
+		 <div id="gritter-item-4" class="gritter-item-wrapper" style="" role="alert">
 			 		<div class="gritter-top"></div>
 			 		<div class="gritter-item">
 			 			<a class="gritter-close" href="javascript:;" tabindex="1" style="display: none;">Close Notification</a>
 			 			<div class="gritter-without-image">
 			 				<span class="gritter-title">Success</span>
 			 				<p> <?php echo $this->session->flashdata('success')?></p>
+			 			</div>
+			 			<div style="clear:both"></div>
+			 		</div>
+			 		<div class="gritter-bottom"></div>
+			 	</div>
+		
+     <?php } ?>
+      <?php if($this->session->flashdata('error')) { ?>
+		 <div id="gritter-item-4" class="gritter-item-wrapper" style="" role="alert" style="background-color: #900 !important;">
+			 		<div class="gritter-top"></div>
+			 		<div class="gritter-item">
+			 			<a class="gritter-close" href="javascript:;" tabindex="1" style="display: none;">Close Notification</a>
+			 			<div class="gritter-without-image">
+			 				<span class="gritter-title">Error</span>
+			 				<p> <?php echo $this->session->flashdata('error')?></p>
 			 			</div>
 			 			<div style="clear:both"></div>
 			 		</div>
@@ -106,3 +119,4 @@
 			</ul>
 			<!-- end header-nav -->
 		</div>
+

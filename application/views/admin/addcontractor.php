@@ -1,7 +1,7 @@
  <?php 
-	$this->load->view('layout/admin/header');
-	$this->load->view('layout/admin/sidebar');
-	$this->load->model('AdminModel');
+	$this->load->view('layout/siteadmin/header');
+	$this->load->view('layout/siteadmin/sidebar');
+	 
 ?>
 		<!-- begin #content -->
 		<div id="content" class="content">
@@ -13,7 +13,7 @@
 			</ol>
 			<!-- end breadcrumb -->
 			<!-- begin page-header -->
-			<h1 class="page-header">Edit Contractor</h1>
+			<h1 class="page-header">Add Contractor</h1>
 			<!-- end page-header -->
 			<!-- begin panel --> 
 				 
@@ -23,60 +23,84 @@
 					<div class="panel panel-inverse" data-sortable-id="form-validation-1">
 						<!-- begin panel-heading -->
 						<div class="panel-heading ui-sortable-handle">
-							<h4 class="panel-title">Edit Contractor</h4>
-							 <a href="<?php echo ADMIN_URL?>showcontractor/<?php echo base64_encode($getcontractor[0]->id); ?>" style="margin-left: 20px;" class="btn btn-green m-r-5 m-b-5">Show Details</a>
+							<h4 class="panel-title">Add Contractor</h4>
+							 
 						</div>
 						<!-- end panel-heading -->
 						<!-- begin panel-body -->
 						<div class="panel-body">
-							<form class="form-horizontal" name="edit_contractor" id="edit_contractor" action="<?php echo ADMIN_URL ?>editcontractor/<?php echo base64_encode($getcontractor[0]->id); ?>" method="post">
-								
+							<form class="form-horizontal" name="add_contractor" id="add_contractor" action="<?php echo ADMIN_URL ?>addcontractor" method="post">
 								<div class="form-group row m-b-15">
-									<label class="col-md-4 col-sm-4 col-form-label" for="fullname">Orgination Name * :</label>
+									<label class="col-md-4 col-sm-4 col-form-label" for="fullname">Organization Name * :</label>
 									<div class="col-md-8 col-sm-8">
-										<input class="form-control" type="text" id="cont_firstname" name="cont_firstname" placeholder="Contrator First name" value="<?php echo $getcontractor[0]->organization_name; ?>" readonly="readonly" >
+										<input class="form-control" type="text" id="cont_organization" name="cont_organization" placeholder="Contrator Organization name" >
 									</div>
 								</div>
-
+								<div class="form-group row m-b-15">
+									<label class="col-md-4 col-sm-4 col-form-label" for="fullname">Contract Name * :</label>
+									<div class="col-md-8 col-sm-8">
+										<input class="form-control" type="text" id="cont_contract_name" name="cont_contract_name" placeholder="Contract Name" >
+									</div>
+								</div>
 								<div class="form-group row m-b-15">
 									<label class="col-md-4 col-sm-4 col-form-label" for="fullname">First Name * :</label>
 									<div class="col-md-8 col-sm-8">
-										<input class="form-control" type="text" id="cont_firstname" name="cont_firstname" placeholder="Contrator First name" value="<?php echo $getcontractor[0]->first_name; ?>" >
+										<input class="form-control" type="text" id="cont_firstname" name="cont_firstname" placeholder="Contrator First name" >
 									</div>
 								</div>
 								<div class="form-group row m-b-15">
 									<label class="col-md-4 col-sm-4 col-form-label" for="fullname">Last Name * :</label>
 									<div class="col-md-8 col-sm-8">
-										<input class="form-control" type="text" id="cont_lastname" name="cont_lastname" placeholder="Contrator Last name"  value="<?php echo $getcontractor[0]->last_name; ?>">
+										<input class="form-control" type="text" id="cont_lastname" name="cont_lastname" placeholder="Contrator Last name" >
 									</div>
 								</div>
 								<div class="form-group row m-b-15">
 									<label class="col-md-4 col-sm-4 col-form-label" for="full1name">User name * :</label>
 									<div class="col-md-8 col-sm-8">
-										<input class="form-control" type="text" id="cont_username" name="cont_username" placeholder="Contrator Username" value="<?php echo $getcontractor[0]->username; ?>" readonly="readonly">
+										<input class="form-control" type="text" id="cont_username" name="cont_username" placeholder="Contrator Username" >
 									</div>
 								</div>
 
 
-								 
+								<div class="form-group row m-b-15">
+									<label class="col-md-4 col-sm-4 col-form-label" for="full1name">Owner Name * :</label>
+									<div class="col-md-8 col-sm-8">
+											<select name="cont_owner" id="cont_owner" class="form-control getpprocessesforcontractor"> 
+												<option value="">- -  Select One Owner - -</option>
+												<?php 
+													foreach ($getallownerlist as $key=>$val){
+												?>
+													<option value="<?php echo $val->id.'|'.$val->devision_id.'|'.$val->station_id.'|'.$val->ownertable_id; ?>"><?php echo $val->first_name.' '.$val->last_name.' , '.$val->devision_name.' (Devision) , '.$val->station_name.' (station)'; ?></option>
+												<?php 
+													}
+												?>
+											</select>
+									</div>
+									<div id="ownerprocesses"></div>
+								</div>
+								<div class="form-group row m-b-15" id="hideprodiv" style="display:none;">
+									<label class="col-md-4 col-sm-4 col-form-label" for="full1name">Processes * :</label>
+									<div class="col-md-8 col-sm-8" id="prodiv">
+										  
+										 
+									</div>
+								</div>
  
 								<div class="form-group row m-b-15">
 									<label class="col-md-4 col-sm-4 col-form-label" for="full1name">Contractor Email * :</label>
 									<div class="col-md-8 col-sm-8">
-										<input class="form-control" type="text" id="cont_email" name="cont_email" placeholder="Contractor Email" value="<?php echo $getcontractor[0]->user_email; ?>" readonly="readonly">
+										<input class="form-control" type="text" id="cont_email" name="cont_email" placeholder="Contractor Email" >
 									</div>
 								</div>
 								 
 								<div class="form-group row m-b-15">
 									<label class="col-md-4 col-sm-4 col-form-label" for="full1name">Mobile Number * :</label>
 									<div class="col-md-8 col-sm-8">
-										<input class="form-control" type="number" id="cont_phone" name="cont_phone" placeholder="Contractor Mobile" value="<?php echo $getcontractor[0]->user_phone; ?>">
+										<input class="form-control" type="number" id="cont_phone" name="cont_phone" placeholder="Contractor Mobile" >
 									</div>
 								</div>
-							
 
 								<div class="form-group row m-b-15">
-										<input type="hidden" name="prepass" id="prepass" value="<?php echo $getcontractor[0]->user_password; ?>">
 									<label class="col-md-4 col-sm-4 col-form-label" for="full1name">User Password * :</label>
 									<div class="col-md-8 col-sm-8">
 										<input class="form-control" type="password" id="cont_password" name="cont_password" placeholder="Contractor Password" >
@@ -112,5 +136,5 @@
 		</div>
 		<!-- end #content -->
 <?php 
-	$this->load->view('layout/admin/footer');
+	$this->load->view('layout/siteadmin/footer');
 ?>
